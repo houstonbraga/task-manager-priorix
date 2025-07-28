@@ -1,9 +1,11 @@
 import Sidebar from "./sidebar"
+import Tasks from "./task"
 
 function App() {
   return (
-    <div>
+    <div className="flex">
       <Sidebar />
+      <Tasks />
     </div>
   )
 }
