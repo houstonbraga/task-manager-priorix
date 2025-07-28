@@ -7,11 +7,11 @@ const Tasks = () => {
       <div className="flex w-full items-end justify-between">
         <div>
           <span className="text-xs text-cyan-400">Minhas Tarefas</span>
-          <h1 className="text-xl font-semibold">Minhas tasks</h1>
+          <h1 className="text-xl font-semibold">Minhas Tarefas</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost">
-            Minhas Tarefas
+            Limpar tarefas
             <Trash2Icon width={20} />
           </Button>
 
