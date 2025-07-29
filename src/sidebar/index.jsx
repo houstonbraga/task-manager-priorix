@@ -10,7 +10,7 @@ const Sidebar = () => {
           <img src={Logo} alt="logo-priorix" width={80} />
           <p>
             Um simples{" "}
-            <span className="text-cyan-300">organizador de prioridades</span>
+            <span className="text-cyan-300">organizador de tarefas</span>
           </p>
         </div>
         <div className="flex flex-col space-y-2 p-2">
