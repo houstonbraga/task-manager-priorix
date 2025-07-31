@@ -4,7 +4,7 @@ import ButtonSidebar from "./components/ButtonSidebar"
 
 const Sidebar = () => {
   return (
-    <div className="flex h-screen w-[270] flex-col justify-between bg-zinc-900">
+    <div className="sticky top-0 flex h-screen w-[270] flex-col justify-between bg-zinc-900">
       <div>
         <div className="space-y-4 border-b border-b-zinc-700 p-5">
           <img src={Logo} alt="logo-priorix" width={80} />

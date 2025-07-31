@@ -4,6 +4,7 @@ import TasksSeparator from "./components/TasksSeparator"
 import TASKS from "../constants/constants"
 import { useState } from "react"
 import ItemTask from "./components/ItemTask"
+import { toast } from "sonner"
 
 const Tasks = () => {
   const [tasks, setTasks] = useState(TASKS)
@@ -14,6 +15,12 @@ const Tasks = () => {
 
   const handleTaskDeleteClick = (taskId) => {
     const newTasks = tasks.filter((task) => taskId !== task.id)
+    toast.success("Tarefa deletada com sucesso!", {
+      style: {
+        backgroundColor: "white",
+        color: "red",
+      },
+    })
     setTasks(newTasks)
   }
 
@@ -24,14 +31,32 @@ const Tasks = () => {
       }
 
       if (task.status === "done") {
+        toast.success("Tarefa desmarcada com sucesso!", {
+          style: {
+            backgroundColor: "gray",
+            color: "white",
+          },
+        })
         return { ...task, status: "not_started" }
       }
 
       if (task.status === "not_started") {
+        toast.success("Tarefa inicializada com sucesso!", {
+          style: {
+            backgroundColor: "#988137",
+            color: "white",
+          },
+        })
         return { ...task, status: "in_progress" }
       }
 
       if (task.status === "in_progress") {
+        toast.success("Tarefa concluida com sucesso!", {
+          style: {
+            backgroundColor: "#53906B",
+            color: "white",
+          },
+        })
         return { ...task, status: "done" }
       }
 
