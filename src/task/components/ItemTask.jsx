@@ -1,7 +1,7 @@
 import { Check, Loader2, SquareArrowOutUpRight, Trash2 } from "lucide-react"
 import Button from "../../components/Button"
 
-const ItemTask = ({ task, handleCheckboxClick }) => {
+const ItemTask = ({ task, handleCheckboxClick, handleDeleteClick }) => {
   const getStyleTaks = () => {
     if (task.status === "not_started") {
       return "bg-zinc-800 bg-opacity-30"
@@ -39,7 +39,7 @@ const ItemTask = ({ task, handleCheckboxClick }) => {
       </div>
 
       <div className="flex items-center gap-1">
-        <Button variant="ghost">
+        <Button variant="ghost" onClick={() => handleDeleteClick(task.id)}>
           <Trash2 className="text-zinc-400 hover:text-white" />
         </Button>
 
