@@ -1,4 +1,4 @@
-import { HomeIcon, ListCheckIcon } from "lucide-react"
+import { LayoutDashboard, ListCheckIcon } from "lucide-react"
 import Logo from "../assets/logo.svg"
 import ButtonSidebar from "./components/ButtonSidebar"
 
@@ -15,8 +15,8 @@ const Sidebar = () => {
         </div>
         <div className="flex flex-col space-y-2 p-2">
           <ButtonSidebar variant="deactivated">
-            <HomeIcon />
-            Início
+            <LayoutDashboard />
+            Dashboard
           </ButtonSidebar>
           <ButtonSidebar variant="activated">
             <ListCheckIcon />
