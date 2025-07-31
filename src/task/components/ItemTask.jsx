@@ -1,6 +1,7 @@
-import { Check, Loader2, SquareArrowOutUpRight } from "lucide-react"
+import { Check, Loader2, SquareArrowOutUpRight, Trash2 } from "lucide-react"
+import Button from "../../components/Button"
 
-const ItemTask = ({ task }) => {
+const ItemTask = ({ task, handleCheckboxClick }) => {
   const getStyleTaks = () => {
     if (task.status === "not_started") {
       return "bg-zinc-800 bg-opacity-30"
@@ -27,6 +28,7 @@ const ItemTask = ({ task }) => {
             type="checkbox"
             checked={task.status === "done"}
             className="absolute h-full w-full cursor-pointer opacity-0"
+            onChange={() => handleCheckboxClick(task.id)}
           />
           {task.status === "done" && <Check width={16} />}
           {task.status === "in_progress" && (
@@ -36,9 +38,15 @@ const ItemTask = ({ task }) => {
         <p className="opacity-100">{task.title}</p>
       </div>
 
-      <button>
-        <SquareArrowOutUpRight className="text-zinc-400 hover:text-white" />
-      </button>
+      <div className="flex items-center gap-1">
+        <Button variant="ghost">
+          <Trash2 className="text-zinc-400 hover:text-white" />
+        </Button>
+
+        <a href="#">
+          <SquareArrowOutUpRight className="text-zinc-400 hover:text-white" />
+        </a>
+      </div>
     </div>
   )
 }
