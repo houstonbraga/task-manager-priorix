@@ -1,4 +1,5 @@
 import { Check, Loader2, SquareArrowOutUpRight, Trash2 } from "lucide-react"
+
 import Button from "../../components/Button"
 
 const ItemTask = ({ task, handleCheckboxClick, handleDeleteClick }) => {

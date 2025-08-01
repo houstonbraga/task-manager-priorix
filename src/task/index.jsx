@@ -1,10 +1,11 @@
 import { CloudSun, MoonIcon, PlusIcon, SunIcon, Trash2Icon } from "lucide-react"
-import Button from "../components/Button"
-import TasksSeparator from "./components/TasksSeparator"
-import TASKS from "../constants/constants"
 import { useState } from "react"
-import ItemTask from "./components/ItemTask"
 import { toast } from "sonner"
+
+import Button from "../components/Button"
+import TASKS from "../constants/constants"
+import ItemTask from "./components/ItemTask"
+import TasksSeparator from "./components/TasksSeparator"
 
 const Tasks = () => {
   const [tasks, setTasks] = useState(TASKS)
