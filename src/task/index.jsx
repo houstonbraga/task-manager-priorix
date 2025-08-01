@@ -4,11 +4,13 @@ import { toast } from "sonner"
 
 import Button from "../components/Button"
 import TASKS from "../constants/constants"
+import AddTaskDialog from "./components/AddTaskDialog"
 import ItemTask from "./components/ItemTask"
 import TasksSeparator from "./components/TasksSeparator"
 
 const Tasks = () => {
   const [tasks, setTasks] = useState(TASKS)
+  const [isOpen, setIsOpen] = useState(false)
 
   const MorningTask = tasks.filter((task) => task.time === "morning")
   const AfternonTask = tasks.filter((task) => task.time === "afternon")
@@ -83,6 +85,7 @@ const Tasks = () => {
 
   return (
     <div className="w-full px-8 py-16">
+      <AddTaskDialog isOpen={isOpen} />
       <div className="mb-8 flex w-full items-end justify-between">
         <div>
           <span className="text-xs text-cyan-400">Minhas Tarefas</span>
@@ -94,7 +97,7 @@ const Tasks = () => {
             <Trash2Icon width={20} />
           </Button>
 
-          <Button variant="primary">
+          <Button variant="primary" onClick={() => setIsOpen(true)}>
             Nova tarefa
             <PlusIcon width={20} />
           </Button>
