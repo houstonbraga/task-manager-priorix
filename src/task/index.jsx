@@ -68,6 +68,10 @@ const Tasks = () => {
     setTasks(newTasks)
   }
 
+  const handleDialogClose = () => {
+    return setIsOpen(false)
+  }
+
   /* handleTaskCheckboxClick = (currentTask) => {
     const UpdateTasksStatus = tasks.map((task) => {
       if (task.id === currentTask.id) {
@@ -85,7 +89,7 @@ const Tasks = () => {
 
   return (
     <div className="w-full px-8 py-16">
-      <AddTaskDialog isOpen={isOpen} />
+      <AddTaskDialog isOpen={isOpen} handleClose={handleDialogClose} />
       <div className="mb-8 flex w-full items-end justify-between">
         <div>
           <span className="text-xs text-cyan-400">Minhas Tarefas</span>
