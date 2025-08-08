@@ -13,7 +13,7 @@ const Tasks = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   const MorningTask = tasks.filter((task) => task.time === "morning")
-  const AfternonTask = tasks.filter((task) => task.time === "afternon")
+  const AfternonTask = tasks.filter((task) => task.time === "afternoon")
   const EveningTask = tasks.filter((task) => task.time === "evening")
 
   const handleTaskDeleteClick = (taskId) => {
@@ -72,9 +72,18 @@ const Tasks = () => {
     return setIsOpen(false)
   }
 
+  const handleAddTask = (newTask) => {
+    setTasks([...tasks, newTask])
+    toast.success("Tarefa criada com sucesso.")
+  }
+
   return (
     <div className="w-full px-8 py-16">
-      <AddTaskDialog isOpen={isOpen} handleClose={handleDialogClose} />
+      <AddTaskDialog
+        isOpen={isOpen}
+        handleClose={handleDialogClose}
+        handleSubmit={handleAddTask}
+      />
       <div className="mb-8 flex w-full items-end justify-between">
         <div>
           <span className="text-xs text-cyan-400">Minhas Tarefas</span>

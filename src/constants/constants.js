@@ -19,7 +19,7 @@ const TASKS = [
     id: v4(),
     title: "Brincar com Théo",
     description: "Brincar com meu filho amado Théo Braga",
-    time: "afternon",
+    time: "afternoon",
     status: "not_started",
   },
   {
