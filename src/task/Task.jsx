@@ -72,21 +72,6 @@ const Tasks = () => {
     return setIsOpen(false)
   }
 
-  /* handleTaskCheckboxClick = (currentTask) => {
-    const UpdateTasksStatus = tasks.map((task) => {
-      if (task.id === currentTask.id) {
-        const statusMap = {
-          done: "not_started",
-          not_started: "in_progress",
-          in_progress: "done",
-        }
-        return { ...task, status: statusMap[task.status] }
-      }
-      return task
-    })
-    setTasks(UpdateTasksStatus)
-  } */
-
   return (
     <div className="w-full px-8 py-16">
       <AddTaskDialog isOpen={isOpen} handleClose={handleDialogClose} />

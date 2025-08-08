@@ -1,7 +1,7 @@
 import { Toaster } from "sonner"
 
 import Sidebar from "./sidebar"
-import Tasks from "./task"
+import Tasks from "./task/Task"
 
 function App() {
   return (

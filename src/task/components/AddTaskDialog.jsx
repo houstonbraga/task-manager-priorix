@@ -6,6 +6,7 @@ import { CSSTransition } from "react-transition-group"
 
 import Button from "../../components/Button"
 import Input from "./Imput"
+import SelectTime from "./SelectTime"
 
 const AddTaskDialog = ({ isOpen, handleClose }) => {
   const nodeRef = useRef()
@@ -31,7 +32,7 @@ const AddTaskDialog = ({ isOpen, handleClose }) => {
           </div>
           <div className="flex flex-col gap-4">
             <Input key="title" label="Tílulo" placeholder="Digite o título" />
-            <Input key="time" label="Horário" placeholder="Selecione" />
+            <SelectTime />
             <Input
               key="description"
               label="Descrição"
