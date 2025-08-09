@@ -7,17 +7,44 @@ import { CSSTransition } from "react-transition-group"
 import { v4 } from "uuid"
 
 import Button from "../../components/Button"
-import Input from "./Imput"
+import Input from "./Input"
 import SelectTime from "./SelectTime"
 
 const AddTaskDialog = ({ isOpen, handleClose, handleSubmit }) => {
   const [title, setTitle] = useState("")
   const [time, setTime] = useState("morning")
   const [description, setDescription] = useState("")
+  const [errors, setErrors] = useState([])
+
+  useEffect(() => {
+    setTitle("")
+    setTime("morning")
+    setDescription("")
+  }, [isOpen])
+
+  const nodeRef = useRef()
 
   const handleSaveTask = () => {
-    if (!title.trim() || !time.trim() || !description.trim()) {
-      return alert("Algum campo obrigatório está faltando!")
+    const newErrors = []
+
+    if (!title.trim()) {
+      newErrors.push({
+        inputName: "title",
+        message: "O título é obrigatório.",
+      })
+    }
+
+    if (!description.trim()) {
+      newErrors.push({
+        inputName: "description",
+        message: "A descrição é obrigatória.",
+      })
+    }
+
+    setErrors(newErrors)
+
+    if (newErrors.length > 0) {
+      return
     }
 
     handleSubmit({
@@ -30,13 +57,10 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSubmit }) => {
     handleClose()
   }
 
-  useEffect(() => {
-    setTitle("")
-    setTime("morning")
-    setDescription("")
-  }, [isOpen])
-
-  const nodeRef = useRef()
+  const errorTitle = errors.find((error) => error.inputName === "title")
+  const errorDescription = errors.find(
+    (error) => error.inputName === "description"
+  )
 
   return createPortal(
     <CSSTransition
@@ -64,6 +88,7 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSubmit }) => {
               placeholder="Digite o título"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              inputError={errorTitle}
             />
             <SelectTime
               value={time}
@@ -75,6 +100,7 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSubmit }) => {
               placeholder="Descreva a tarefa"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              inputError={errorDescription}
             />
           </div>
           <div className="flex items-center justify-center gap-3">

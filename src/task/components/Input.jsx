@@ -1,6 +1,6 @@
 import InputLabel from "./InputLabel"
 
-const Input = ({ label, ...rest }) => {
+const Input = ({ label, inputError, ...rest }) => {
   return (
     <div className="flex flex-col gap-1 text-left">
       <InputLabel label={label} />
@@ -8,6 +8,9 @@ const Input = ({ label, ...rest }) => {
         className="rounded-md border border-solid border-zinc-500 bg-transparent px-4 py-2"
         {...rest}
       />
+      {inputError && (
+        <span className="text-xs text-red-500">{inputError.message}</span>
+      )}
     </div>
   )
 }
