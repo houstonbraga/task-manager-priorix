@@ -40,7 +40,7 @@ const ItemTask = ({ task, handleCheckboxClick, handleDeleteClick }) => {
       </div>
 
       <div className="flex items-center gap-1">
-        <Button variant="ghost" onClick={() => handleDeleteClick(task.id)}>
+        <Button color="ghost" onClick={() => handleDeleteClick(task.id)}>
           <Trash2 className="text-zinc-400 hover:text-white" />
         </Button>
 

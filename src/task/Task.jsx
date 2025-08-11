@@ -90,12 +90,12 @@ const Tasks = () => {
           <h1 className="text-xl font-semibold">Minhas Tarefas</h1>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost">
+          <Button color="ghost">
             Limpar tarefas
             <Trash2Icon width={20} />
           </Button>
 
-          <Button variant="primary" onClick={() => setIsOpen(true)}>
+          <Button color="primary" onClick={() => setIsOpen(true)}>
             Nova tarefa
             <PlusIcon width={20} />
           </Button>

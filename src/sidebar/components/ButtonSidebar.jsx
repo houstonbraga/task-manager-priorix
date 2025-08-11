@@ -1,19 +1,21 @@
-const ButtonSidebar = ({ children, variant }) => {
-  const getChangeButton = () => {
-    if (variant === "activated") {
-      return "text-cyan-400 bg-zinc-800"
-    }
+import { tv } from "tailwind-variants"
 
-    if (variant === "deactivated") {
-      return "text-white bg-zinc-900 hover:text-cyan-400"
-    }
-  }
+const ButtonSidebar = ({ children, mode }) => {
+  const button = tv({
+    base: "flex items-center gap-3 rounded-lg px-6 py-3",
+    variants: {
+      mode: {
+        activated: "bg-zinc-800 text-cyan-400",
+        desactivated: "bg-zinc-900 text-white hover:text-cyan-400",
+      },
+    },
+    defaultVariants: {
+      mode: "desactivated",
+    },
+  })
 
   return (
-    <a
-      href="#"
-      className={`flex items-center gap-3 rounded-lg px-6 py-3 ${getChangeButton()}`}
-    >
+    <a href="#" className={button({ mode })}>
       {children}
     </a>
   )

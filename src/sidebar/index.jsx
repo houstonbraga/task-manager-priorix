@@ -15,11 +15,11 @@ const Sidebar = () => {
           </p>
         </div>
         <div className="flex flex-col space-y-2 p-2">
-          <ButtonSidebar variant="deactivated">
+          <ButtonSidebar>
             <LayoutDashboardIcon width={20} />
             Dashboard
           </ButtonSidebar>
-          <ButtonSidebar variant="activated">
+          <ButtonSidebar mode="activated">
             <ListCheckIcon />
             Minhas Tarefas
           </ButtonSidebar>
