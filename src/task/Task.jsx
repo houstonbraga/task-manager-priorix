@@ -46,7 +46,7 @@ const Tasks = () => {
       if (task.status === "not_started") {
         toast.success("Tarefa inicializada com sucesso!", {
           style: {
-            backgroundColor: "#988137",
+            backgroundColor: "brand-yellow",
             color: "white",
           },
         })
@@ -56,7 +56,7 @@ const Tasks = () => {
       if (task.status === "in_progress") {
         toast.success("Tarefa concluida com sucesso!", {
           style: {
-            backgroundColor: "#53906B",
+            backgroundColor: "brand-green",
             color: "white",
           },
         })

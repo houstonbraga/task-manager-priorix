@@ -5,7 +5,14 @@ export default {
     fontFamily: {
       sans: ["Poppins", "sans-serif"],
     },
-    extend: {},
+    extend: {
+      colors: {
+        brand: {
+          yellow: "brand-yellow",
+          green: "brand-green",
+        },
+      },
+    },
   },
   plugins: [],
 }
