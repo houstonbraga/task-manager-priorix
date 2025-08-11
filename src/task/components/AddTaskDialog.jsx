@@ -11,21 +11,22 @@ import Input from "./Input"
 import SelectTime from "./SelectTime"
 
 const AddTaskDialog = ({ isOpen, handleClose, handleSubmit }) => {
-  const [title, setTitle] = useState("")
   const [time, setTime] = useState("morning")
-  const [description, setDescription] = useState("")
   const [errors, setErrors] = useState([])
 
-  useEffect(() => {
-    setTitle("")
-    setTime("morning")
-    setDescription("")
-  }, [isOpen])
-
   const nodeRef = useRef()
+  const titleRef = useRef()
+  const descriptionRef = useRef()
+
+  useEffect(() => {
+    setTime("morning")
+  }, [isOpen]) //para apagar ao salvar, com useEffects apenas com inputs controlaveis "Controlled"
+  //ou seja, o title e description usam useRef portando nao precisam de useEffect para apagar o estado, pois eles nao tem estado
 
   const handleSaveTask = () => {
     const newErrors = []
+    const title = titleRef.current.value
+    const description = descriptionRef.current.value
 
     if (!title.trim()) {
       newErrors.push({
@@ -86,8 +87,7 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSubmit }) => {
               key="title"
               label="Tílulo"
               placeholder="Digite o título"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              ref={titleRef}
               inputError={errorTitle}
             />
             <SelectTime
@@ -98,8 +98,7 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSubmit }) => {
               key="description"
               label="Descrição"
               placeholder="Descreva a tarefa"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              ref={descriptionRef}
               inputError={errorDescription}
             />
           </div>
