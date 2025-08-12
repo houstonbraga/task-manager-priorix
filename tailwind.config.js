@@ -8,8 +8,8 @@ export default {
     extend: {
       colors: {
         brand: {
-          yellow: "brand-yellow",
-          green: "brand-green",
+          yellow: "#5d512d",
+          green: "#3a5948",
         },
       },
     },
