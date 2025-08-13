@@ -1,3 +1,5 @@
+import PropTypes from "prop-types"
+
 import InputLabel from "./InputLabel"
 
 const SelectTime = (props) => {
@@ -14,6 +16,10 @@ const SelectTime = (props) => {
       </select>
     </div>
   )
+}
+
+SelectTime.propTypes = {
+  props: PropTypes.node,
 }
 
 export default SelectTime
