@@ -1,4 +1,5 @@
 import { Check, Loader2, SquareArrowOutUpRight, Trash2 } from "lucide-react"
+import PropTypes from "prop-types"
 
 import Button from "../../components/Button"
 
@@ -50,6 +51,18 @@ const ItemTask = ({ task, handleCheckboxClick, handleDeleteClick }) => {
       </div>
     </div>
   )
+}
+
+ItemTask.propTypes = {
+  task: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    time: PropTypes.oneOf(["morning", "afternoon", "evening"]).isRequired,
+    status: PropTypes.oneOf(["not_started", "in_progress", "done"]).isRequired,
+  }).isRequired,
+  handleCheckboxClick: PropTypes.func.isRequired,
+  handleDeleteClick: PropTypes.func.isRequired,
 }
 
 export default ItemTask
