@@ -1,3 +1,4 @@
+import PropTypes from "prop-types"
 import { forwardRef } from "react"
 
 import InputErrorMessage from "./InputErrorMessage"
@@ -20,5 +21,9 @@ const Input = forwardRef(({ label, inputError, ...rest }, ref) => {
 })
 
 Input.displayName = "Input"
+Input.propTypes = {
+  label: PropTypes.string.isRequired,
+  inputError: PropTypes.string,
+}
 
 export default Input
