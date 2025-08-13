@@ -1,3 +1,4 @@
+import PropTypes from "prop-types"
 import { tv } from "tailwind-variants"
 
 const ButtonSidebar = ({ children, mode }) => {
@@ -19,6 +20,11 @@ const ButtonSidebar = ({ children, mode }) => {
       {children}
     </a>
   )
+}
+
+ButtonSidebar.propTypes = {
+  children: PropTypes.node.isRequired,
+  mode: PropTypes.oneOf(["activated", "desactivated"]),
 }
 
 export default ButtonSidebar
