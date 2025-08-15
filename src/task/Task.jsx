@@ -1,32 +1,48 @@
 import { CloudSun, MoonIcon, PlusIcon, SunIcon, Trash2Icon } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
 import Button from "../components/Button"
-import TASKS from "../constants/constants"
 import AddTaskDialog from "./components/AddTaskDialog"
 import ItemTask from "./components/ItemTask"
 import TasksSeparator from "./components/TasksSeparator"
 
 const Tasks = () => {
-  const [tasks, setTasks] = useState(TASKS)
+  const [tasks, setTasks] = useState([])
   const [isOpen, setIsOpen] = useState(false)
 
   const MorningTask = tasks.filter((task) => task.time === "morning")
   const AfternonTask = tasks.filter((task) => task.time === "afternoon")
   const EveningTask = tasks.filter((task) => task.time === "evening")
-
-  const handleTaskDeleteClick = (taskId) => {
+  //PEGA OS DADOS JA EXISTENTES NO DB.JSON
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const response = await fetch("http://localhost:3000/tasks", {
+        method: "GET",
+      })
+      const tasks = await response.json()
+      setTasks(tasks)
+    }
+    fetchTasks()
+  }, [])
+  //DELETE ALGUMA TASK PELO ID
+  const handleTaskDeleteClick = async (taskId) => {
+    const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
+      method: "DELETE",
+    })
+    if (!response.ok) {
+      return toast.error("Erro ao deletar tarefa!")
+    }
     const newTasks = tasks.filter((task) => taskId !== task.id)
+    setTasks(newTasks)
     toast.success("Tarefa deletada com sucesso!", {
       style: {
         backgroundColor: "white",
         color: "red",
       },
     })
-    setTasks(newTasks)
   }
-
+  //MUDA O STATUS DA TAREFA AO SER CLICADO
   const handleTaskCheckboxClick = (taskId) => {
     const newTasks = tasks.map((task) => {
       if (taskId !== task.id) {
@@ -71,8 +87,15 @@ const Tasks = () => {
   const handleDialogClose = () => {
     return setIsOpen(false)
   }
-
-  const handleAddTask = (newTask) => {
+  //ADICIONA UMA NOVA TASK PARA O DB.JSON
+  const handleAddTask = async (newTask) => {
+    const response = await fetch("http://localhost:3000/tasks", {
+      method: "POST",
+      body: JSON.stringify(newTask),
+    })
+    if (!response.ok) {
+      return toast.error("Erro ao criar a tarefa!")
+    }
     setTasks([...tasks, newTask])
     toast.success("Tarefa criada com sucesso.")
   }
