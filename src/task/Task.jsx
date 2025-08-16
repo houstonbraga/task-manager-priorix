@@ -15,6 +15,7 @@ const Tasks = () => {
   const AfternonTask = tasks.filter((task) => task.time === "afternoon")
   const EveningTask = tasks.filter((task) => task.time === "evening")
   //PEGA OS DADOS JA EXISTENTES NO DB.JSON
+  //O useEffect é utilizado para assim que carregar a pagina, o front-end faz o fetch e atualiza o state tasks
   useEffect(() => {
     const fetchTasks = async () => {
       const response = await fetch("http://localhost:3000/tasks", {
