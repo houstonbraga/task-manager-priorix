@@ -1,19 +1,22 @@
 import "./AddTaskDialog.css"
 
+import { Loader2 } from "lucide-react"
 import PropTypes from "prop-types"
 import { useEffect, useRef } from "react"
 import { useState } from "react"
 import { createPortal } from "react-dom"
 import { CSSTransition } from "react-transition-group"
+import { toast } from "sonner"
 import { v4 } from "uuid"
 
 import Button from "../../components/Button"
 import Input from "./Input"
 import SelectTime from "./SelectTime"
 
-const AddTaskDialog = ({ isOpen, handleClose, handleSubmit }) => {
+const AddTaskDialog = ({ isOpen, handleClose, handleSuccess }) => {
   const [time, setTime] = useState("morning")
   const [errors, setErrors] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const nodeRef = useRef()
   const titleRef = useRef()
@@ -24,7 +27,8 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSubmit }) => {
   }, [isOpen]) //para apagar ao salvar, com useEffects apenas com inputs controlaveis "Controlled"
   //ou seja, o title e description usam useRef portando nao precisam de useEffect para apagar o estado, pois eles nao tem estado
 
-  const handleSaveTask = () => {
+  const handleSaveTask = async () => {
+    setIsLoading(true)
     const newErrors = []
     const title = titleRef.current.value
     const description = descriptionRef.current.value
@@ -46,16 +50,19 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSubmit }) => {
     setErrors(newErrors)
 
     if (newErrors.length > 0) {
+      setIsLoading(false)
       return
     }
-
-    handleSubmit({
-      id: v4(),
-      title,
-      time,
-      description,
-      status: "not_started",
+    const task = { id: v4(), title, time, description, status: "not_started" }
+    const response = await fetch("http://localhost:3000/tasks", {
+      method: "POST",
+      body: JSON.stringify(task),
     })
+    if (!response.ok) {
+      return toast.error("Erro ao criar a tarefa!")
+    }
+    setIsLoading(false)
+    handleSuccess(task)
     handleClose()
   }
 
@@ -117,6 +124,7 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSubmit }) => {
               className="w-full"
               onClick={() => handleSaveTask()}
             >
+              {isLoading && <Loader2 className="animate-spin" />}
               Salvar
             </Button>
           </div>
@@ -130,7 +138,7 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSubmit }) => {
 AddTaskDialog.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
+  handleSuccess: PropTypes.func.isRequired,
 }
 
 export default AddTaskDialog

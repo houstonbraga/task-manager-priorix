@@ -84,13 +84,6 @@ const Tasks = () => {
   }
   //ADICIONA UMA NOVA TASK PARA O DB.JSON
   const handleAddTask = async (newTask) => {
-    const response = await fetch("http://localhost:3000/tasks", {
-      method: "POST",
-      body: JSON.stringify(newTask),
-    })
-    if (!response.ok) {
-      return toast.error("Erro ao criar a tarefa!")
-    }
     setTasks([...tasks, newTask])
     toast.success("Tarefa criada com sucesso.")
   }
@@ -100,7 +93,7 @@ const Tasks = () => {
       <AddTaskDialog
         isOpen={isOpen}
         handleClose={handleDialogClose}
-        handleSubmit={handleAddTask}
+        handleSuccess={handleAddTask}
       />
       <div className="mb-8 flex w-full items-end justify-between">
         <div>
