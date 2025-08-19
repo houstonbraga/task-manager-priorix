@@ -1,18 +1,3 @@
 {
-  "tasks": [
-    {
-      "id": "37371116-f830-4f74-bf62-68874735312e",
-      "title": "Estudar Banco de dados",
-      "time": "afternoon",
-      "description": "Estudar para resolver unns problemas de código",
-      "status": "not_started"
-    },
-    {
-      "id": "a064e039-d049-4f95-bf0b-bcdfc7b33463",
-      "title": "Estudar inglês",
-      "time": "morning",
-      "description": "dasdasd",
-      "status": "not_started"
-    }
-  ]
+  "tasks": []
 }

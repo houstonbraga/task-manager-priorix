@@ -1,9 +1,26 @@
 import { Check, Loader2, SquareArrowOutUpRight, Trash2 } from "lucide-react"
 import PropTypes from "prop-types"
+import { useState } from "react"
+import { toast } from "sonner"
 
 import Button from "../../components/Button"
 
-const ItemTask = ({ task, handleCheckboxClick, handleDeleteClick }) => {
+const ItemTask = ({ task, handleCheckboxClick, onSuccess }) => {
+  const [isLoadingDeleteTask, setIsLoadingDeleteTask] = useState(false)
+
+  const handleDeleteClick = async () => {
+    setIsLoadingDeleteTask(true)
+    const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
+      method: "DELETE",
+    })
+    if (!response.ok) {
+      setIsLoadingDeleteTask(false)
+      return toast.error("Erro ao deletar tarefa!")
+    }
+    setIsLoadingDeleteTask(false)
+    onSuccess(task.id)
+  }
+
   const getStyleTaks = () => {
     if (task.status === "not_started") {
       return "bg-zinc-800 bg-opacity-30"
@@ -41,8 +58,16 @@ const ItemTask = ({ task, handleCheckboxClick, handleDeleteClick }) => {
       </div>
 
       <div className="flex items-center gap-1">
-        <Button color="ghost" onClick={() => handleDeleteClick(task.id)}>
-          <Trash2 className="text-zinc-400 hover:text-white" />
+        <Button
+          color="ghost"
+          onClick={handleDeleteClick}
+          disabled={isLoadingDeleteTask}
+        >
+          {isLoadingDeleteTask ? (
+            <Loader2 width={16} className="animate-spin" />
+          ) : (
+            <Trash2 className="text-zinc-400 hover:text-white" />
+          )}
         </Button>
 
         <a href="#">
