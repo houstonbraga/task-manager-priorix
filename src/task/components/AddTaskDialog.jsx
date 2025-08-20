@@ -123,6 +123,7 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess }) => {
               size="large"
               className="w-full"
               onClick={() => handleSaveTask()}
+              disabled={isLoading}
             >
               {isLoading && <Loader2 className="animate-spin" />}
               Salvar

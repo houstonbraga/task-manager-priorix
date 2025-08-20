@@ -1,18 +1,3 @@
 {
-  "tasks": [
-    {
-      "id": "2db91459-73fa-4159-99d6-5abc1da528a9",
-      "title": "teste",
-      "time": "morning",
-      "description": "teste",
-      "status": "not_started"
-    },
-    {
-      "id": "1ebffb32-cf1e-4083-b429-d78b7e10e25d",
-      "title": "teste2",
-      "time": "afternoon",
-      "description": "teste2",
-      "status": "not_started"
-    }
-  ]
+  "tasks": []
 }

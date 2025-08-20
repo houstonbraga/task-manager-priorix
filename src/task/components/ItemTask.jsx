@@ -87,7 +87,7 @@ ItemTask.propTypes = {
     status: PropTypes.oneOf(["not_started", "in_progress", "done"]).isRequired,
   }).isRequired,
   handleCheckboxClick: PropTypes.func.isRequired,
-  handleDeleteClick: PropTypes.func.isRequired,
+  handleDeleteClick: PropTypes.func,
 }
 
 export default ItemTask
