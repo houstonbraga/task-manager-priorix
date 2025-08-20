@@ -54,9 +54,9 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess }) => {
       body: JSON.stringify(task),
     })
     if (!response.ok) {
+      setIsLoading(false)
       return toast.error("Erro ao criar a tarefa!")
     }
-    setIsLoading(false)
     handleSuccess(task)
     handleClose()
   }
