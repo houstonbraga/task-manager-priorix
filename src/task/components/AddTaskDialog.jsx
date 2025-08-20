@@ -26,29 +26,24 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess }) => {
     setTime("morning")
   }, [isOpen]) //para apagar ao salvar, com useEffects apenas com inputs controlaveis "Controlled"
   //ou seja, o title e description usam useRef portando nao precisam de useEffect para apagar o estado, pois eles nao tem estado
-
   const handleSaveTask = async () => {
     setIsLoading(true)
     const newErrors = []
     const title = titleRef.current.value
     const description = descriptionRef.current.value
-
     if (!title.trim()) {
       newErrors.push({
         inputName: "title",
         message: "O título é obrigatório.",
       })
     }
-
     if (!description.trim()) {
       newErrors.push({
         inputName: "description",
         message: "A descrição é obrigatória.",
       })
     }
-
     setErrors(newErrors)
-
     if (newErrors.length > 0) {
       setIsLoading(false)
       return
@@ -65,12 +60,10 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess }) => {
     handleSuccess(task)
     handleClose()
   }
-
   const errorTitle = errors.find((error) => error.inputName === "title")
   const errorDescription = errors.find(
     (error) => error.inputName === "description"
   )
-
   return createPortal(
     <CSSTransition
       nodeRef={nodeRef}
@@ -97,6 +90,7 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess }) => {
               placeholder="Digite o título"
               ref={titleRef}
               inputError={errorTitle}
+              disabled={isLoading}
             />
             <SelectTime
               value={time}
@@ -108,6 +102,7 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess }) => {
               placeholder="Descreva a tarefa"
               ref={descriptionRef}
               inputError={errorDescription}
+              disabled={isLoading}
             />
           </div>
           <div className="flex items-center justify-center gap-3">
