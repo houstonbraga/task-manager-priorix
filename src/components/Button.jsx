@@ -9,6 +9,7 @@ const Button = ({ children, color, size, className, ...rest }) => {
         primary: "bg-cyan-500",
         ghost: "bg-transparent",
         secondary: "bg-zinc-500",
+        danger: "bg-red-400",
       },
       size: {
         small: "py-1 text-xs",

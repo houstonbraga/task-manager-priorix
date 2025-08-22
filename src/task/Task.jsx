@@ -112,7 +112,7 @@ const Tasks = () => {
             <Trash2Icon width={20} />
           </Button>
 
-          <Button color="primary" onClick={() => setIsOpen(true)}>
+          <Button color="primary" size="small" onClick={() => setIsOpen(true)}>
             Nova tarefa
             <PlusIcon width={20} />
           </Button>

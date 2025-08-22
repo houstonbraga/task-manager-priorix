@@ -5,7 +5,7 @@ import ReactDOM from "react-dom/client"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 
 import App from "./App.jsx"
-import TaskDetails from "./pages/task-details.jsx"
+import TaskDetails from "./pages/task-details/task-details.jsx"
 
 const router = createBrowserRouter([
   {

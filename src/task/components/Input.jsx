@@ -22,7 +22,7 @@ const Input = forwardRef(({ label, inputError, ...rest }, ref) => {
 
 Input.displayName = "Input"
 Input.propTypes = {
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
   inputError: PropTypes.string,
 }
 
