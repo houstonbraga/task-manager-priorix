@@ -82,6 +82,10 @@ const Tasks = () => {
   const handleDialogClose = () => {
     return setIsOpen(false)
   }
+
+  const handleSubmitError = () => {
+    return toast.error("Erro ao criar a tarefa!")
+  }
   //ADICIONA UMA NOVA TASK PARA O DB.JSON
   const handleAddTask = async (newTask) => {
     setTasks([...tasks, newTask])
@@ -94,6 +98,7 @@ const Tasks = () => {
         isOpen={isOpen}
         handleClose={handleDialogClose}
         handleSuccess={handleAddTask}
+        submitError={handleSubmitError}
       />
       <div className="mb-8 flex w-full items-end justify-between">
         <div>

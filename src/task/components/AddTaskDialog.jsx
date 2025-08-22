@@ -6,14 +6,13 @@ import { useEffect, useRef } from "react"
 import { useState } from "react"
 import { createPortal } from "react-dom"
 import { CSSTransition } from "react-transition-group"
-import { toast } from "sonner"
 import { v4 } from "uuid"
 
 import Button from "../../components/Button"
 import Input from "./Input"
 import SelectTime from "./SelectTime"
 
-const AddTaskDialog = ({ isOpen, handleClose, handleSuccess }) => {
+const AddTaskDialog = ({ isOpen, handleClose, handleSuccess, submitError }) => {
   const [time, setTime] = useState("morning")
   const [errors, setErrors] = useState([])
   const [isLoading, setIsLoading] = useState(false)
@@ -55,7 +54,7 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess }) => {
     })
     if (!response.ok) {
       setIsLoading(false)
-      return toast.error("Erro ao criar a tarefa!")
+      return submitError()
     }
     handleSuccess(task)
     handleClose()
