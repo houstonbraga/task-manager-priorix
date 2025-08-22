@@ -1,6 +1,7 @@
 import { Check, Loader2, SquareArrowOutUpRight, Trash2 } from "lucide-react"
 import PropTypes from "prop-types"
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import { toast } from "sonner"
 
 import Button from "../../components/Button"
@@ -70,9 +71,9 @@ const ItemTask = ({ task, handleCheckboxClick, onSuccess }) => {
           )}
         </Button>
 
-        <a href="#">
+        <Link to={`/tasks/${task.id}`}>
           <SquareArrowOutUpRight className="text-zinc-400 hover:text-white" />
-        </a>
+        </Link>
       </div>
     </div>
   )

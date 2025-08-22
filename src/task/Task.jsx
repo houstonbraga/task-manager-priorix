@@ -26,6 +26,7 @@ const Tasks = () => {
     }
     fetchTasks()
   }, [])
+
   //DELETE ALGUMA TASK PELO ID
   const handleDeleteSuccess = async (taskId) => {
     const newTasks = tasks.filter((task) => taskId !== task.id)
