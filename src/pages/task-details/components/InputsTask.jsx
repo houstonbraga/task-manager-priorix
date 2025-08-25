@@ -19,9 +19,6 @@ const InputsTask = () => {
       </div>
 
       <div className="flex w-full gap-5">
-        <Button size="large" color="secondary">
-          Cancelar
-        </Button>
         <Button size="large" color="primary">
           Salvar
         </Button>

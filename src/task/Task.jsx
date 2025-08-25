@@ -11,9 +11,9 @@ const Tasks = () => {
   const [tasks, setTasks] = useState([])
   const [isOpen, setIsOpen] = useState(false)
 
-  const MorningTask = tasks.filter((task) => task.time === "morning")
-  const AfternonTask = tasks.filter((task) => task.time === "afternoon")
-  const EveningTask = tasks.filter((task) => task.time === "evening")
+  const morningTask = tasks.filter((task) => task.time === "morning")
+  const afternoonTask = tasks.filter((task) => task.time === "afternoon")
+  const eveningTask = tasks.filter((task) => task.time === "evening")
   //PEGA OS DADOS JA EXISTENTES NO DB.JSON
   //O useEffect é utilizado para assim que carregar a pagina, o front-end faz o fetch e atualiza o state tasks
   useEffect(() => {
@@ -122,8 +122,12 @@ const Tasks = () => {
       <div className="rounded-xl bg-zinc-900 p-6">
         <div className="space-y-3">
           <TasksSeparator title="Manhã" icon={<SunIcon />} />
-
-          {MorningTask.map((task, index) => (
+          {morningTask.length === 0 && (
+            <p className="text-sm text-gray-600">
+              Nenhuma tarefa encontrada para esse período.
+            </p>
+          )}
+          {morningTask.map((task, index) => (
             <ItemTask
               key={index}
               task={task}
@@ -135,7 +139,12 @@ const Tasks = () => {
 
         <div className="my-6 space-y-3">
           <TasksSeparator title="Tarde" icon={<CloudSun />} />
-          {AfternonTask.map((task, index) => (
+          {afternoonTask.length === 0 && (
+            <p className="text-sm text-gray-600">
+              Nenhuma tarefa encontrada para esse período.
+            </p>
+          )}
+          {afternoonTask.map((task, index) => (
             <ItemTask
               key={index}
               task={task}
@@ -147,7 +156,12 @@ const Tasks = () => {
 
         <div className="space-y-3">
           <TasksSeparator title="Noite" icon={<MoonIcon />} />
-          {EveningTask.map((task, index) => (
+          {eveningTask.length === 0 && (
+            <p className="text-sm text-gray-600">
+              Nenhuma tarefa encontrada para esse período.
+            </p>
+          )}
+          {eveningTask.map((task, index) => (
             <ItemTask
               key={index}
               task={task}
