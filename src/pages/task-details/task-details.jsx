@@ -77,7 +77,7 @@ const TaskDetailsPage = () => {
     setTask(data)
     setSaveIsLoading(false)
     toast.success("Tarefa editada com sucesso!")
-    navigate("/")
+    navigate(-1)
   }
 
   const handleDeleteClick = async () => {
