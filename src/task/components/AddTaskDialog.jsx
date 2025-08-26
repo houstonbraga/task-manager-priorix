@@ -2,7 +2,7 @@ import "./AddTaskDialog.css"
 
 import { Loader2 } from "lucide-react"
 import PropTypes from "prop-types"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { useState } from "react"
 import { createPortal } from "react-dom"
 import { CSSTransition } from "react-transition-group"
@@ -13,27 +13,30 @@ import Input from "./Input"
 import SelectTime from "./SelectTime"
 
 const AddTaskDialog = ({ isOpen, handleClose, handleSuccess, submitError }) => {
-  const [time, setTime] = useState("morning")
   const [errors, setErrors] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
   const nodeRef = useRef()
   const titleRef = useRef()
+  const timeRef = useRef()
   const descriptionRef = useRef()
 
-  useEffect(() => {
-    setTime("morning")
-  }, [isOpen]) //para apagar ao salvar, com useEffects apenas com inputs controlaveis "Controlled"
-  //ou seja, o title e description usam useRef portando nao precisam de useEffect para apagar o estado, pois eles nao tem estado
   const handleSaveTask = async () => {
     setIsLoading(true)
     const newErrors = []
     const title = titleRef.current.value
     const description = descriptionRef.current.value
+    const time = timeRef.current.value
     if (!title.trim()) {
       newErrors.push({
         inputName: "title",
         message: "O título é obrigatório.",
+      })
+    }
+    if (!time.trim()) {
+      newErrors.push({
+        inputName: "time",
+        message: "O tempo é obrigatório.",
       })
     }
     if (!description.trim()) {
@@ -57,9 +60,11 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess, submitError }) => {
       return submitError()
     }
     handleSuccess(task)
+    setIsLoading(false)
     handleClose()
   }
   const errorTitle = errors.find((error) => error.inputName === "title")
+  const errorTime = errors.find((error) => error.inputName === "time")
   const errorDescription = errors.find(
     (error) => error.inputName === "description"
   )
@@ -88,19 +93,20 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess, submitError }) => {
               label="Tílulo"
               placeholder="Digite o título"
               ref={titleRef}
-              inputError={errorTitle}
+              inputError={errorTitle?.message}
               disabled={isLoading}
             />
             <SelectTime
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
+              ref={timeRef}
+              disabled={isLoading}
+              inputError={errorTime?.message}
             />
             <Input
               key="description"
               label="Descrição"
               placeholder="Descreva a tarefa"
               ref={descriptionRef}
-              inputError={errorDescription}
+              inputError={errorDescription?.message}
               disabled={isLoading}
             />
           </div>
