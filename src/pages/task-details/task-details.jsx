@@ -1,5 +1,6 @@
 import { ChevronRight, ChevronsLeft, Loader2, Trash2Icon } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { toast } from "sonner"
 
@@ -9,15 +10,15 @@ import Input from "../../task/components/Input"
 import SelectTime from "../../task/components/SelectTime"
 
 const TaskDetailsPage = () => {
-  const [task, setTask] = useState()
-  const [errors, setErrors] = useState([])
-  const [saveIsLoading, setSaveIsLoading] = useState(false)
+  const [task, setTask] = useState([])
   const { taskId } = useParams()
   const navigate = useNavigate()
-
-  const titleRef = useRef()
-  const descriptionRef = useRef()
-  const timeRef = useRef()
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm()
 
   useEffect(() => {
     const tasksDetailsFetch = async () => {
@@ -25,57 +26,27 @@ const TaskDetailsPage = () => {
         method: "GET",
       })
       const data = await response.json()
+
       setTask(data)
+      reset(data)
     }
     tasksDetailsFetch()
-  }, [taskId])
+  }, [taskId, reset]) //reset é usado para sincronizar os dados do form com os da api
 
-  const handleSaveTask = async () => {
-    setSaveIsLoading(true)
-    const newErrors = []
-    const title = titleRef.current.value
-    const time = timeRef.current.value
-    const description = descriptionRef.current.value
-    if (!title.trim()) {
-      newErrors.push({
-        inputName: "title",
-        message: "O título é obrigatório.",
-      })
-    }
-    if (!time.trim()) {
-      newErrors.push({
-        inputName: "time",
-        message: "O tempo é obrigatório.",
-      })
-    }
-    if (!description.trim()) {
-      newErrors.push({
-        inputName: "description",
-        message: "A descrição é obrigatória.",
-      })
-    }
-    setErrors(newErrors)
-    if (newErrors.length > 0) {
-      setSaveIsLoading(false)
-      return
-    }
-    const updateTask = {
-      ...task,
-      title,
-      time,
-      description,
-    }
+  const handleSaveTask = async (data) => {
     const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
       method: "PATCH",
-      body: JSON.stringify(updateTask),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: data.title.trim(),
+        description: data.description.trim(),
+      }),
     })
     if (!response.ok) {
-      setSaveIsLoading(false)
       return toast.error("Erro ao salvar a tarefa!")
     }
-    const data = await response.json()
-    setTask(data)
-    setSaveIsLoading(false)
+    const newTask = await response.json()
+    setTask(newTask)
     toast.success("Tarefa editada com sucesso!")
     navigate(-1)
   }
@@ -91,12 +62,6 @@ const TaskDetailsPage = () => {
     toast.success("Tarefa deletada com sucesso!")
     navigate(-1)
   }
-
-  const errorTitle = errors.find((error) => error.inputName === "title")
-  const errorTime = errors.find((error) => error.inputName === "time")
-  const errorDescription = errors.find(
-    (error) => error.inputName === "description"
-  )
 
   return (
     <div className="flex">
@@ -131,24 +96,34 @@ const TaskDetailsPage = () => {
             </Button>
           </div>
         </div>
-        <div className="flex flex-col place-items-end space-y-6 rounded-xl bg-zinc-900 p-6">
+        <form
+          onSubmit={handleSubmit(handleSaveTask)}
+          className="flex flex-col place-items-end space-y-6 rounded-xl bg-zinc-900 p-6"
+        >
           <div className="w-full space-y-3">
             <div>
               <Input
                 id="title"
                 label="Título"
-                inputError={errorTitle?.message}
-                disabled={saveIsLoading}
-                defaultValue={task?.title}
-                ref={titleRef}
+                inputError={errors?.title?.message}
+                {...register("title", {
+                  required: "O título é obrigatório",
+                  validate: (value) => {
+                    if (!value.trim()) {
+                      return "O título tem que ser ao menos 1 caractere."
+                    }
+                    return true
+                  },
+                  maxLength: 20,
+                })}
               />
             </div>
             <div>
               <SelectTime
-                inputError={errorTime?.message}
-                defaultValue={task?.time}
-                disabled={saveIsLoading}
-                ref={timeRef}
+                inputError={errors?.time?.message}
+                {...register("time", {
+                  required: "O tempo é obrigatório",
+                })}
               />
             </div>
 
@@ -156,26 +131,27 @@ const TaskDetailsPage = () => {
               <Input
                 id="description"
                 label="Descrição"
-                inputError={errorDescription?.message}
-                disabled={saveIsLoading}
-                defaultValue={task?.description}
-                ref={descriptionRef}
+                inputError={errors?.description?.message}
+                {...register("description", {
+                  required: "A descrição é obrigatória",
+                  validate: (value) => {
+                    if (!value.trim()) {
+                      return "A descrição que ter ao menos 1 caractere."
+                    }
+                    return true
+                  },
+                })}
               />
             </div>
           </div>
 
           <div className="flex w-full gap-5">
-            <Button
-              size="large"
-              color="primary"
-              onClick={handleSaveTask}
-              disabled={saveIsLoading}
-            >
-              {saveIsLoading && <Loader2 className="animate-spin" />}
+            <Button size="large" color="primary" type="submit">
+              {isSubmitting && <Loader2 className="animate-spin" />}
               Salvar
             </Button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   )
