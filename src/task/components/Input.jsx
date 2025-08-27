@@ -13,9 +13,7 @@ const Input = forwardRef(({ label, inputError, ...rest }, ref) => {
         {...rest}
         ref={ref}
       />
-      {inputError && (
-        <InputErrorMessage>{inputError.message}</InputErrorMessage>
-      )}
+      {inputError && <InputErrorMessage>{inputError}</InputErrorMessage>}
     </div>
   )
 })

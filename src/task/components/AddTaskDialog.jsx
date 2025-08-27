@@ -18,7 +18,9 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess, submitError }) => {
     register,
     formState: { errors, isSubmitting },
     handleSubmit,
+    reset,
   } = useForm()
+
   const handleSaveTask = async (data) => {
     const title = data.title
     const description = data.description
@@ -38,6 +40,20 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess, submitError }) => {
       return submitError()
     }
     handleSuccess(newTask)
+    handleClose()
+    reset({
+      title: "",
+      time: "morning",
+      description: "",
+    })
+  }
+
+  const handleCancelClick = () => {
+    reset({
+      title: "",
+      time: "morning",
+      description: "",
+    })
     handleClose()
   }
   return createPortal(
@@ -68,6 +84,7 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess, submitError }) => {
                 key="title"
                 label="Tílulo"
                 placeholder="Digite o título"
+                disabled={isSubmitting}
                 inputError={errors?.title?.message}
                 {...register("title", {
                   required: "O título é obrigatório.",
@@ -82,14 +99,14 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess, submitError }) => {
               />
               <SelectTime
                 inputError={errors?.time?.message}
-                {...register("time", {
-                  required: "O tempo é obrigatório.",
-                })}
+                disabled={isSubmitting}
+                {...register("time", { required: true })}
               />
               <Input
                 key="description"
                 label="Descrição"
                 placeholder="Descreva a tarefa"
+                disabled={isSubmitting}
                 inputError={errors?.description?.message}
                 {...register("description", {
                   required: "A descrição é obrigatória.",
@@ -97,6 +114,7 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess, submitError }) => {
                     if (!value.trim()) {
                       return "A descrição precisa de ao menos um caractere."
                     }
+                    return true
                   },
                 })}
               />
@@ -106,12 +124,19 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess, submitError }) => {
                 color="secondary"
                 size="large"
                 className="w-full"
-                onClick={handleClose}
+                type="button"
+                disabled={isSubmitting}
+                onClick={handleCancelClick}
               >
                 {isSubmitting && <Loader2 className="animate-spin" />}
                 Cancelar
               </Button>
-              <Button size="large" className="w-full" type="submit">
+              <Button
+                size="large"
+                className="w-full"
+                type="submit"
+                disabled={isSubmitting}
+              >
                 Salvar
               </Button>
             </div>

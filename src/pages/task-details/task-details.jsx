@@ -106,6 +106,7 @@ const TaskDetailsPage = () => {
                 id="title"
                 label="Título"
                 inputError={errors?.title?.message}
+                disabled={isSubmitting}
                 {...register("title", {
                   required: "O título é obrigatório",
                   validate: (value) => {
@@ -121,6 +122,7 @@ const TaskDetailsPage = () => {
             <div>
               <SelectTime
                 inputError={errors?.time?.message}
+                disabled={isSubmitting}
                 {...register("time", {
                   required: "O tempo é obrigatório",
                 })}
@@ -132,6 +134,7 @@ const TaskDetailsPage = () => {
                 id="description"
                 label="Descrição"
                 inputError={errors?.description?.message}
+                disabled={isSubmitting}
                 {...register("description", {
                   required: "A descrição é obrigatória",
                   validate: (value) => {
