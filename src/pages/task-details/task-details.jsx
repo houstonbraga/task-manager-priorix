@@ -26,7 +26,6 @@ const TaskDetailsPage = () => {
         method: "GET",
       })
       const data = await response.json()
-
       setTask(data)
       reset(data)
     }
@@ -39,6 +38,7 @@ const TaskDetailsPage = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         title: data.title.trim(),
+        time: data.time,
         description: data.description.trim(),
       }),
     })

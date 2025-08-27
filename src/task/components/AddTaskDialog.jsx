@@ -3,8 +3,8 @@ import "./AddTaskDialog.css"
 import { Loader2 } from "lucide-react"
 import PropTypes from "prop-types"
 import { useRef } from "react"
-import { useState } from "react"
 import { createPortal } from "react-dom"
+import { useForm } from "react-hook-form"
 import { CSSTransition } from "react-transition-group"
 import { v4 } from "uuid"
 
@@ -13,61 +13,33 @@ import Input from "./Input"
 import SelectTime from "./SelectTime"
 
 const AddTaskDialog = ({ isOpen, handleClose, handleSuccess, submitError }) => {
-  const [errors, setErrors] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
-
   const nodeRef = useRef()
-  const titleRef = useRef()
-  const timeRef = useRef()
-  const descriptionRef = useRef()
-
-  const handleSaveTask = async () => {
-    setIsLoading(true)
-    const newErrors = []
-    const title = titleRef.current.value
-    const description = descriptionRef.current.value
-    const time = timeRef.current.value
-    if (!title.trim()) {
-      newErrors.push({
-        inputName: "title",
-        message: "O título é obrigatório.",
-      })
-    }
-    if (!time.trim()) {
-      newErrors.push({
-        inputName: "time",
-        message: "O tempo é obrigatório.",
-      })
-    }
-    if (!description.trim()) {
-      newErrors.push({
-        inputName: "description",
-        message: "A descrição é obrigatória.",
-      })
-    }
-    setErrors(newErrors)
-    if (newErrors.length > 0) {
-      setIsLoading(false)
-      return
-    }
-    const task = { id: v4(), title, time, description, status: "not_started" }
+  const {
+    register,
+    formState: { errors, isSubmitting },
+    handleSubmit,
+  } = useForm()
+  const handleSaveTask = async (data) => {
+    const title = data.title
+    const description = data.description
+    const time = data.time
+    const newTask = {
+      id: v4(),
+      title,
+      time,
+      description,
+      status: "not_started",
+    } //newTasks pega todas as info que voce digitou e passa para o body JSON
     const response = await fetch("http://localhost:3000/tasks", {
       method: "POST",
-      body: JSON.stringify(task),
+      body: JSON.stringify(newTask),
     })
     if (!response.ok) {
-      setIsLoading(false)
       return submitError()
     }
-    handleSuccess(task)
-    setIsLoading(false)
+    handleSuccess(newTask)
     handleClose()
   }
-  const errorTitle = errors.find((error) => error.inputName === "title")
-  const errorTime = errors.find((error) => error.inputName === "time")
-  const errorDescription = errors.find(
-    (error) => error.inputName === "description"
-  )
   return createPortal(
     <CSSTransition
       nodeRef={nodeRef}
@@ -87,48 +59,63 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess, submitError }) => {
               Insira as informações abaixo
             </p>
           </div>
-          <div className="flex flex-col gap-4">
-            <Input
-              key="title"
-              label="Tílulo"
-              placeholder="Digite o título"
-              ref={titleRef}
-              inputError={errorTitle?.message}
-              disabled={isLoading}
-            />
-            <SelectTime
-              ref={timeRef}
-              disabled={isLoading}
-              inputError={errorTime?.message}
-            />
-            <Input
-              key="description"
-              label="Descrição"
-              placeholder="Descreva a tarefa"
-              ref={descriptionRef}
-              inputError={errorDescription?.message}
-              disabled={isLoading}
-            />
-          </div>
-          <div className="flex items-center justify-center gap-3">
-            <Button
-              color="secondary"
-              size="large"
-              className="w-full"
-              onClick={handleClose}
-            >
-              Cancelar
-            </Button>
-            <Button
-              size="large"
-              className="w-full"
-              onClick={() => handleSaveTask()}
-              disabled={isLoading}
-            >
-              {isLoading && <Loader2 className="animate-spin" />}
-              Salvar
-            </Button>
-          </div>
+          <form
+            onSubmit={handleSubmit(handleSaveTask)}
+            className="flex flex-col gap-4"
+          >
+            <div className="flex flex-col gap-4">
+              <Input
+                key="title"
+                label="Tílulo"
+                placeholder="Digite o título"
+                inputError={errors?.title?.message}
+                {...register("title", {
+                  required: "O título é obrigatório.",
+                  maxLength: 20,
+                  validate: (value) => {
+                    if (!value.trim()) {
+                      return "O título precisa ao menos de um caractere."
+                    }
+                    return true
+                  },
+                })}
+              />
+              <SelectTime
+                inputError={errors?.time?.message}
+                {...register("time", {
+                  required: "O tempo é obrigatório.",
+                })}
+              />
+              <Input
+                key="description"
+                label="Descrição"
+                placeholder="Descreva a tarefa"
+                inputError={errors?.description?.message}
+                {...register("description", {
+                  required: "A descrição é obrigatória.",
+                  validate: (value) => {
+                    if (!value.trim()) {
+                      return "A descrição precisa de ao menos um caractere."
+                    }
+                  },
+                })}
+              />
+            </div>
+            <div className="flex items-center justify-center gap-3">
+              <Button
+                color="secondary"
+                size="large"
+                className="w-full"
+                onClick={handleClose}
+              >
+                {isSubmitting && <Loader2 className="animate-spin" />}
+                Cancelar
+              </Button>
+              <Button size="large" className="w-full" type="submit">
+                Salvar
+              </Button>
+            </div>
+          </form>
         </div>
       </div>
     </CSSTransition>,
