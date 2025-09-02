@@ -26,18 +26,6 @@ const Tasks = () => {
   const afternoonTask = tasks?.filter((task) => task.time === "afternoon")
   const eveningTask = tasks?.filter((task) => task.time === "evening")
 
-  //DELETE ALGUMA TASK PELO ID
-  const handleDeleteSuccess = async (taskId) => {
-    toast.success("Tarefa deletada com sucesso!", {
-      style: {
-        backgroundColor: "white",
-        color: "red",
-      },
-    })
-    queryClient.setQueryData(["tasks"], (currentData) => {
-      return currentData.filter((task) => taskId !== task.id)
-    })
-  }
   //MUDA O STATUS DA TAREFA AO SER CLICADO
   const handleTaskCheckboxClick = (taskId) => {
     const newTasks = tasks.map((task) => {
@@ -133,7 +121,6 @@ const Tasks = () => {
               key={index}
               task={task}
               handleCheckboxClick={handleTaskCheckboxClick}
-              onSuccess={handleDeleteSuccess}
             />
           ))}
         </div>
@@ -150,7 +137,6 @@ const Tasks = () => {
               key={index}
               task={task}
               handleCheckboxClick={handleTaskCheckboxClick}
-              onSuccess={handleDeleteSuccess}
             />
           ))}
         </div>
@@ -167,7 +153,6 @@ const Tasks = () => {
               key={index}
               task={task}
               handleCheckboxClick={handleTaskCheckboxClick}
-              onSuccess={handleDeleteSuccess}
             />
           ))}
         </div>
