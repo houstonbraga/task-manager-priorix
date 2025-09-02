@@ -1,5 +1,6 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { CloudSun, MoonIcon, PlusIcon, SunIcon, Trash2Icon } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { toast } from "sonner"
 
 import Button from "../components/Button"
@@ -8,34 +9,33 @@ import ItemTask from "./components/ItemTask"
 import TasksSeparator from "./components/TasksSeparator"
 
 const Tasks = () => {
-  const [tasks, setTasks] = useState([])
-  const [isOpen, setIsOpen] = useState(false)
-
-  const morningTask = tasks.filter((task) => task.time === "morning")
-  const afternoonTask = tasks.filter((task) => task.time === "afternoon")
-  const eveningTask = tasks.filter((task) => task.time === "evening")
-  //PEGA OS DADOS JA EXISTENTES NO DB.JSON
-  //O useEffect é utilizado para assim que carregar a pagina, o front-end faz o fetch e atualiza o state tasks
-  useEffect(() => {
-    const fetchTasks = async () => {
+  const queryClient = useQueryClient()
+  const { data: tasks } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: async () => {
       const response = await fetch("http://localhost:3000/tasks", {
         method: "GET",
       })
       const tasks = await response.json()
-      setTasks(tasks)
-    }
-    fetchTasks()
-  }, [])
+      return tasks
+    },
+  })
+  const [isOpen, setIsOpen] = useState(false)
+
+  const morningTask = tasks?.filter((task) => task.time === "morning")
+  const afternoonTask = tasks?.filter((task) => task.time === "afternoon")
+  const eveningTask = tasks?.filter((task) => task.time === "evening")
 
   //DELETE ALGUMA TASK PELO ID
   const handleDeleteSuccess = async (taskId) => {
-    const newTasks = tasks.filter((task) => taskId !== task.id)
-    setTasks(newTasks)
     toast.success("Tarefa deletada com sucesso!", {
       style: {
         backgroundColor: "white",
         color: "red",
       },
+    })
+    queryClient.setQueryData(["tasks"], (currentData) => {
+      return currentData.filter((task) => taskId !== task.id)
     })
   }
   //MUDA O STATUS DA TAREFA AO SER CLICADO
@@ -74,10 +74,9 @@ const Tasks = () => {
         })
         return { ...task, status: "done" }
       }
-
       return task
     })
-    setTasks(newTasks)
+    queryClient.setQueryData(["tasks"], newTasks)
   }
 
   const handleDialogClose = () => {
@@ -89,8 +88,10 @@ const Tasks = () => {
   }
   //ADICIONA UMA NOVA TASK PARA O DB.JSON
   const handleAddTask = async (newTask) => {
-    setTasks([...tasks, newTask])
     toast.success("Tarefa criada com sucesso.")
+    queryClient.setQueryData(["tasks"], (currentData) => {
+      return [...currentData, newTask]
+    })
   }
 
   return (
@@ -122,12 +123,12 @@ const Tasks = () => {
       <div className="rounded-xl bg-zinc-900 p-6">
         <div className="space-y-3">
           <TasksSeparator title="Manhã" icon={<SunIcon />} />
-          {morningTask.length === 0 && (
+          {morningTask?.length === 0 && (
             <p className="text-sm text-gray-600">
               Nenhuma tarefa encontrada para esse período.
             </p>
           )}
-          {morningTask.map((task, index) => (
+          {morningTask?.map((task, index) => (
             <ItemTask
               key={index}
               task={task}
@@ -139,12 +140,12 @@ const Tasks = () => {
 
         <div className="my-6 space-y-3">
           <TasksSeparator title="Tarde" icon={<CloudSun />} />
-          {afternoonTask.length === 0 && (
+          {afternoonTask?.length === 0 && (
             <p className="text-sm text-gray-600">
               Nenhuma tarefa encontrada para esse período.
             </p>
           )}
-          {afternoonTask.map((task, index) => (
+          {afternoonTask?.map((task, index) => (
             <ItemTask
               key={index}
               task={task}
@@ -156,12 +157,12 @@ const Tasks = () => {
 
         <div className="space-y-3">
           <TasksSeparator title="Noite" icon={<MoonIcon />} />
-          {eveningTask.length === 0 && (
+          {eveningTask?.length === 0 && (
             <p className="text-sm text-gray-600">
               Nenhuma tarefa encontrada para esse período.
             </p>
           )}
-          {eveningTask.map((task, index) => (
+          {eveningTask?.map((task, index) => (
             <ItemTask
               key={index}
               task={task}

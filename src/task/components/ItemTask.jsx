@@ -22,7 +22,7 @@ const ItemTask = ({ task, handleCheckboxClick, onSuccess }) => {
     onSuccess(task.id)
   }
 
-  const getStyleTaks = () => {
+  const getStyleTasks = () => {
     if (task.status === "not_started") {
       return "bg-zinc-800 bg-opacity-30"
     }
@@ -38,11 +38,11 @@ const ItemTask = ({ task, handleCheckboxClick, onSuccess }) => {
 
   return (
     <div
-      className={`flex items-center justify-between rounded-xl p-3 text-sm ${getStyleTaks()}`}
+      className={`flex items-center justify-between rounded-xl p-3 text-sm ${getStyleTasks()}`}
     >
       <div className="flex items-center gap-3">
         <label
-          className={`relative flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg ${task.status === "not_started" ? "bg-zinc-700 bg-opacity-30" : getStyleTaks()}`}
+          className={`relative flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg ${task.status === "not_started" ? "bg-zinc-700 bg-opacity-30" : getStyleTasks()}`}
         >
           <input
             type="checkbox"

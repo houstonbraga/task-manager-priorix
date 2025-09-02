@@ -1,17 +1,3 @@
 {
-  "tasks": [
-    {
-      "id": "c7227ced-b9cf-41f8-b8da-515d7a3e44be",
-      "title": "dsds",
-      "description": "dsd",
-      "status": "not_started"
-    },
-    {
-      "id": "d03f7973-2565-4e4d-b1fa-256f7065cb0d",
-      "title": "Théo Braga",
-      "time": "evening",
-      "description": "botar o nenem pra nanar",
-      "status": "not_started"
-    }
-  ]
+  "tasks": []
 }
