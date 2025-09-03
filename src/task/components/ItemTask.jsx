@@ -18,7 +18,7 @@ const ItemTask = ({ task, handleCheckboxClick }) => {
     },
   })
 
-  const handleDeleteClick = async () => {
+  const handleDeleteClick = () => {
     mutate(undefined, {
       onSuccess: () => {
         toast.success("Tarefa deletada com sucesso!", {

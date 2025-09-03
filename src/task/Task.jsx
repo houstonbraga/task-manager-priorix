@@ -1,5 +1,12 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { CloudSun, MoonIcon, PlusIcon, SunIcon, Trash2Icon } from "lucide-react"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+  CloudSun,
+  Loader2,
+  MoonIcon,
+  PlusIcon,
+  SunIcon,
+  Trash2Icon,
+} from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
 
@@ -71,15 +78,35 @@ const Tasks = () => {
     return setIsOpen(false)
   }
 
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["deleteAllTasks"],
+    mutationFn: async () => {
+      const tasks = await fetch("http://localhost:3000/tasks").then((res) =>
+        res.json()
+      )
+
+      await Promise.all(
+        tasks.map((task) =>
+          fetch(`http://localhost:3000/tasks/${task.id}`, { method: "DELETE" })
+        )
+      )
+    },
+  })
+
+  const deleteAllTasks = async () => {
+    mutate(undefined, {
+      onSuccess: () => {
+        toast.success("Tarefas deletadas com sucesso!")
+        queryClient.setQueryData(["tasks"], [])
+      },
+      onError: () => {
+        toast.error("Erro ao deletar tarefas.")
+      },
+    })
+  }
+
   const handleSubmitError = () => {
     return toast.error("Erro ao criar a tarefa!")
-  }
-  //ADICIONA UMA NOVA TASK PARA O DB.JSON
-  const handleAddTask = async (newTask) => {
-    toast.success("Tarefa criada com sucesso.")
-    queryClient.setQueryData(["tasks"], (currentData) => {
-      return [...currentData, newTask]
-    })
   }
 
   return (
@@ -87,7 +114,6 @@ const Tasks = () => {
       <AddTaskDialog
         isOpen={isOpen}
         handleClose={handleDialogClose}
-        handleSuccess={handleAddTask}
         submitError={handleSubmitError}
       />
       <div className="mb-8 flex w-full items-end justify-between">
@@ -96,9 +122,13 @@ const Tasks = () => {
           <h1 className="text-xl font-semibold">Minhas Tarefas</h1>
         </div>
         <div className="flex items-center gap-2">
-          <Button color="ghost">
+          <Button color="ghost" onClick={deleteAllTasks} disabled={isPending}>
             Limpar tarefas
-            <Trash2Icon width={20} />
+            {isPending ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              <Trash2Icon width={20} />
+            )}
           </Button>
 
           <Button color="primary" size="small" onClick={() => setIsOpen(true)}>

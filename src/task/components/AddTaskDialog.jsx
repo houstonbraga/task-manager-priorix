@@ -1,18 +1,35 @@
 import "./AddTaskDialog.css"
 
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import PropTypes from "prop-types"
 import { useRef } from "react"
 import { createPortal } from "react-dom"
 import { useForm } from "react-hook-form"
 import { CSSTransition } from "react-transition-group"
+import { toast } from "sonner"
 import { v4 } from "uuid"
 
 import Button from "../../components/Button"
 import Input from "./Input"
 import SelectTime from "./SelectTime"
 
-const AddTaskDialog = ({ isOpen, handleClose, handleSuccess, submitError }) => {
+const AddTaskDialog = ({ isOpen, handleClose }) => {
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation({
+    mutationKey: ["addTask"],
+    mutationFn: async (newTask) => {
+      const response = await fetch("http://localhost:3000/tasks", {
+        method: "POST",
+        body: JSON.stringify(newTask),
+      })
+      if (!response.ok) {
+        throw new Error()
+      }
+      return response.json()
+    },
+  })
+
   const nodeRef = useRef()
   const {
     register,
@@ -32,19 +49,23 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess, submitError }) => {
       description,
       status: "not_started",
     } //newTasks pega todas as info que voce digitou e passa para o body JSON
-    const response = await fetch("http://localhost:3000/tasks", {
-      method: "POST",
-      body: JSON.stringify(newTask),
-    })
-    if (!response.ok) {
-      return submitError()
-    }
-    handleSuccess(newTask)
-    handleClose()
-    reset({
-      title: "",
-      time: "morning",
-      description: "",
+    mutate(newTask, {
+      onSuccess: () => {
+        toast.success("Tarefa criada com sucesso.")
+        queryClient.setQueryData(["tasks"], (currentData) => {
+          return [...currentData, newTask]
+        })
+        handleClose()
+        reset({
+          title: "",
+          time: "morning",
+          description: "",
+        })
+      },
+
+      onError: () => {
+        toast.error("Falha ao adicionar tarefa!")
+      },
     })
   }
 
@@ -151,7 +172,7 @@ const AddTaskDialog = ({ isOpen, handleClose, handleSuccess, submitError }) => {
 AddTaskDialog.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  handleSuccess: PropTypes.func.isRequired,
+  handleSuccess: PropTypes.func,
 }
 
 export default AddTaskDialog
