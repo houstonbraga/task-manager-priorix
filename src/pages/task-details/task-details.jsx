@@ -1,5 +1,5 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { ChevronRight, ChevronsLeft, Loader2, Trash2Icon } from "lucide-react"
-import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { toast } from "sonner"
@@ -10,7 +10,7 @@ import Input from "../../task/components/Input"
 import SelectTime from "../../task/components/SelectTime"
 
 const TaskDetailsPage = () => {
-  const [task, setTask] = useState([])
+  const queryClient = useQueryClient()
   const { taskId } = useParams()
   const navigate = useNavigate()
   const {
@@ -20,47 +20,82 @@ const TaskDetailsPage = () => {
     formState: { errors, isSubmitting },
   } = useForm()
 
-  useEffect(() => {
-    const tasksDetailsFetch = async () => {
+  const { data: task } = useQuery({
+    queryKey: ["task", taskId],
+    queryFn: async () => {
       const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
         method: "GET",
       })
       const data = await response.json()
-      setTask(data)
       reset(data)
-    }
-    tasksDetailsFetch()
-  }, [taskId, reset]) //reset é usado para sincronizar os dados do form com os da api
+    },
+  })
 
-  const handleSaveTask = async (data) => {
-    const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: data.title.trim(),
-        time: data.time,
-        description: data.description.trim(),
-      }),
+  const { mutate, isPending: updateIsLoading } = useMutation({
+    mutationKey: ["updateTask", taskId],
+    mutationFn: async (data) => {
+      const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: data.title.trim(),
+          time: data.time,
+          description: data.description.trim(),
+        }),
+      })
+      if (!response.ok) {
+        throw new Error()
+      }
+      const updatedTask = await response.json()
+      queryClient.setQueryData(["tasks"], (oldTasks) => {
+        return oldTasks.map((oldTask) => {
+          if (oldTask.id === updatedTask.id) {
+            return updatedTask
+          }
+          return oldTask
+        })
+      })
+    },
+  })
+
+  const { mutate: deleteTask, isPending: deleteIsLoading } = useMutation({
+    mutationKey: ["deleteTask", taskId],
+    mutationFn: async () => {
+      const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
+        method: "DELETE",
+      })
+      if (!response.ok) {
+        throw new Error()
+      }
+      const deletedTask = await response.json()
+      queryClient.setQueryData(["tasks"], (oldTasks) => {
+        return oldTasks.filter(() => deletedTask.id !== oldTasks.id)
+      })
+    },
+  })
+
+  const handleSaveTask = (data) => {
+    mutate(data, {
+      onSuccess: () => {
+        toast.success("Tarefa atualizada com sucesso!")
+        navigate(-1)
+      },
+      onError: () => {
+        toast.error("Erro ao atualizar tarefa.")
+      },
     })
-    if (!response.ok) {
-      return toast.error("Erro ao salvar a tarefa!")
-    }
-    const newTask = await response.json()
-    setTask(newTask)
-    toast.success("Tarefa editada com sucesso!")
-    navigate(-1)
   }
 
-  const handleDeleteClick = async () => {
-    const response = await fetch(`http://localhost:3000/tasks/${task.id}`, {
-      method: "DELETE",
+  const handleDeleteClick = () => {
+    deleteTask(undefined, {
+      onSuccess: () => {
+        toast.success("Tarefa deletada com sucesso!")
+        navigate(-1)
+      },
+      onError: () => {
+        toast.error("Erro ao deletar tarefa")
+      },
     })
-    if (!response.ok) {
-      return toast.error("Erro ao deletar tarefa!")
-    }
-
-    toast.success("Tarefa deletada com sucesso!")
-    navigate(-1)
   }
 
   return (
@@ -90,9 +125,18 @@ const TaskDetailsPage = () => {
             <h1 className="text-xl font-semibold">{task?.title}</h1>
           </div>
           <div className="flex items-center gap-2">
-            <Button color="danger" size="small" onClick={handleDeleteClick}>
+            <Button
+              color="danger"
+              size="small"
+              onClick={handleDeleteClick}
+              disabled={updateIsLoading || deleteIsLoading}
+            >
               Deletar tarefa
-              <Trash2Icon width={20} />
+              {deleteIsLoading ? (
+                <Loader2 width={20} />
+              ) : (
+                <Trash2Icon width={20} />
+              )}
             </Button>
           </div>
         </div>
@@ -149,8 +193,12 @@ const TaskDetailsPage = () => {
           </div>
 
           <div className="flex w-full gap-5">
-            <Button size="large" color="primary" type="submit">
-              {isSubmitting && <Loader2 className="animate-spin" />}
+            <Button
+              size="large"
+              color="primary"
+              type="submit"
+              disabled={updateIsLoading || deleteIsLoading}
+            >
               Salvar
             </Button>
           </div>
