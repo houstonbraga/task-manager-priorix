@@ -1,6 +1,5 @@
 import "./AddTaskDialog.css"
 
-import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import PropTypes from "prop-types"
 import { useRef } from "react"
@@ -11,24 +10,12 @@ import { toast } from "sonner"
 import { v4 } from "uuid"
 
 import Button from "../../components/Button"
+import { useAddTask } from "../../hooks/data/use-add-task"
 import Input from "./Input"
 import SelectTime from "./SelectTime"
 
 const AddTaskDialog = ({ isOpen, handleClose }) => {
-  const queryClient = useQueryClient()
-  const { mutate } = useMutation({
-    mutationKey: ["addTask"],
-    mutationFn: async (newTask) => {
-      const response = await fetch("http://localhost:3000/tasks", {
-        method: "POST",
-        body: JSON.stringify(newTask),
-      })
-      if (!response.ok) {
-        throw new Error()
-      }
-      return response.json()
-    },
-  })
+  const { mutate: addTask } = useAddTask()
 
   const nodeRef = useRef()
   const {
@@ -49,12 +36,9 @@ const AddTaskDialog = ({ isOpen, handleClose }) => {
       description,
       status: "not_started",
     } //newTasks pega todas as info que voce digitou e passa para o body JSON
-    mutate(newTask, {
+    addTask(newTask, {
       onSuccess: () => {
         toast.success("Tarefa criada com sucesso.")
-        queryClient.setQueryData(["tasks"], (currentData) => {
-          return [...currentData, newTask]
-        })
         handleClose()
         reset({
           title: "",

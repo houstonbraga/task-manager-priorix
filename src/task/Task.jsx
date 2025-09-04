@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQueryClient } from "@tanstack/react-query"
 import {
   CloudSun,
   Loader2,
@@ -11,22 +11,16 @@ import { useState } from "react"
 import { toast } from "sonner"
 
 import Button from "../components/Button"
+import { useDeleteAllTasks } from "../hooks/data/use-delete-all-tasks"
+import { useGetTasks } from "../hooks/data/use-get-tasks"
 import AddTaskDialog from "./components/AddTaskDialog"
 import ItemTask from "./components/ItemTask"
 import TasksSeparator from "./components/TasksSeparator"
 
 const Tasks = () => {
   const queryClient = useQueryClient()
-  const { data: tasks } = useQuery({
-    queryKey: ["tasks"],
-    queryFn: async () => {
-      const response = await fetch("http://localhost:3000/tasks", {
-        method: "GET",
-      })
-      const tasks = await response.json()
-      return tasks
-    },
-  })
+  const { data: tasks } = useGetTasks()
+  const { mutate: deleteTasks, isPending } = useDeleteAllTasks()
   const [isOpen, setIsOpen] = useState(false)
 
   const morningTask = tasks?.filter((task) => task.time === "morning")
@@ -78,26 +72,10 @@ const Tasks = () => {
     return setIsOpen(false)
   }
 
-  const { mutate, isPending } = useMutation({
-    mutationKey: ["deleteAllTasks"],
-    mutationFn: async () => {
-      const tasks = await fetch("http://localhost:3000/tasks").then((res) =>
-        res.json()
-      )
-
-      await Promise.all(
-        tasks.map((task) =>
-          fetch(`http://localhost:3000/tasks/${task.id}`, { method: "DELETE" })
-        )
-      )
-    },
-  })
-
   const deleteAllTasks = async () => {
-    mutate(undefined, {
+    deleteTasks(undefined, {
       onSuccess: () => {
         toast.success("Tarefas deletadas com sucesso!")
-        queryClient.setQueryData(["tasks"], [])
       },
       onError: () => {
         toast.error("Erro ao deletar tarefas.")
