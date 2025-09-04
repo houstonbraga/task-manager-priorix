@@ -19,18 +19,22 @@ const TaskDetailsPage = () => {
     reset,
     formState: { errors, isSubmitting },
   } = useForm()
-
+  //atualiza a pagina com a task escolhida
   const { data: task } = useQuery({
     queryKey: ["task", taskId],
     queryFn: async () => {
       const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
         method: "GET",
       })
+      if (!response.ok) {
+        throw new Error()
+      }
       const data = await response.json()
       reset(data)
+      return data
     },
   })
-
+  //atualiza a task com a mudança nos inputs
   const { mutate, isPending: updateIsLoading } = useMutation({
     mutationKey: ["updateTask", taskId],
     mutationFn: async (data) => {
@@ -57,7 +61,7 @@ const TaskDetailsPage = () => {
       })
     },
   })
-
+  //deleta uma task e atualiza a lista restante
   const { mutate: deleteTask, isPending: deleteIsLoading } = useMutation({
     mutationKey: ["deleteTask", taskId],
     mutationFn: async () => {
@@ -69,7 +73,7 @@ const TaskDetailsPage = () => {
       }
       const deletedTask = await response.json()
       queryClient.setQueryData(["tasks"], (oldTasks) => {
-        return oldTasks.filter(() => deletedTask.id !== oldTasks.id)
+        return oldTasks.filter((oldTask) => deletedTask.id !== oldTask.id)
       })
     },
   })
