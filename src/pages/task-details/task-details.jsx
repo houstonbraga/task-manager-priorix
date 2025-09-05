@@ -1,16 +1,17 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { ChevronRight, ChevronsLeft, Loader2, Trash2Icon } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { toast } from "sonner"
 
 import Button from "../../components/Button"
+import { useDeleteTask } from "../../hooks/data/use-delete-task"
+import { useGetTaskDetails } from "../../hooks/data/use-get-task-details"
+import { useUpdateTaskDetails } from "../../hooks/data/use-update-task-details"
 import Sidebar from "../../sidebar"
 import Input from "../../task/components/Input"
 import SelectTime from "../../task/components/SelectTime"
 
 const TaskDetailsPage = () => {
-  const queryClient = useQueryClient()
   const { taskId } = useParams()
   const navigate = useNavigate()
   const {
@@ -19,67 +20,17 @@ const TaskDetailsPage = () => {
     reset,
     formState: { errors, isSubmitting },
   } = useForm()
-  //atualiza a pagina com a task escolhida
-  const { data: task } = useQuery({
-    queryKey: ["task", taskId],
-    queryFn: async () => {
-      const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
-        method: "GET",
-      })
-      if (!response.ok) {
-        throw new Error()
-      }
-      const data = await response.json()
-      reset(data)
-      return data
-    },
-  })
-  //atualiza a task com a mudança nos inputs
-  const { mutate, isPending: updateIsLoading } = useMutation({
-    mutationKey: ["updateTask", taskId],
-    mutationFn: async (data) => {
-      const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: data.title.trim(),
-          time: data.time,
-          description: data.description.trim(),
-        }),
-      })
-      if (!response.ok) {
-        throw new Error()
-      }
-      const updatedTask = await response.json()
-      queryClient.setQueryData(["tasks"], (oldTasks) => {
-        return oldTasks.map((oldTask) => {
-          if (oldTask.id === updatedTask.id) {
-            return updatedTask
-          }
-          return oldTask
-        })
-      })
-    },
-  })
-  //deleta uma task e atualiza a lista restante
-  const { mutate: deleteTask, isPending: deleteIsLoading } = useMutation({
-    mutationKey: ["deleteTask", taskId],
-    mutationFn: async () => {
-      const response = await fetch(`http://localhost:3000/tasks/${taskId}`, {
-        method: "DELETE",
-      })
-      if (!response.ok) {
-        throw new Error()
-      }
-      const deletedTask = await response.json()
-      queryClient.setQueryData(["tasks"], (oldTasks) => {
-        return oldTasks.filter((oldTask) => deletedTask.id !== oldTask.id)
-      })
-    },
-  })
+  //atualiza a pagina
+  const { data: task } = useGetTaskDetails(taskId, reset)
+  //update
+  const { mutate: updateTask, isPending: updateIsLoading } =
+    useUpdateTaskDetails(taskId)
+  //delete
+  const { mutate: deleteTask, isPending: deleteIsLoading } =
+    useDeleteTask(taskId)
 
   const handleSaveTask = (data) => {
-    mutate(data, {
+    updateTask(data, {
       onSuccess: () => {
         toast.success("Tarefa atualizada com sucesso!")
         navigate(-1)
@@ -163,7 +114,10 @@ const TaskDetailsPage = () => {
                     }
                     return true
                   },
-                  maxLength: 20,
+                  maxLength: {
+                    value: 20,
+                    message: "Ops, o título é muito grande.",
+                  },
                 })}
               />
             </div>
