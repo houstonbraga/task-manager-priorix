@@ -124,9 +124,9 @@ const Tasks = () => {
               Nenhuma tarefa encontrada para esse período.
             </p>
           )}
-          {morningTask?.map((task, index) => (
+          {morningTask?.map((task) => (
             <ItemTask
-              key={index}
+              key={task.id}
               task={task}
               handleCheckboxClick={handleTaskCheckboxClick}
             />
@@ -140,9 +140,9 @@ const Tasks = () => {
               Nenhuma tarefa encontrada para esse período.
             </p>
           )}
-          {afternoonTask?.map((task, index) => (
+          {afternoonTask?.map((task) => (
             <ItemTask
-              key={index}
+              key={task.id}
               task={task}
               handleCheckboxClick={handleTaskCheckboxClick}
             />
@@ -156,9 +156,9 @@ const Tasks = () => {
               Nenhuma tarefa encontrada para esse período.
             </p>
           )}
-          {eveningTask?.map((task, index) => (
+          {eveningTask?.map((task) => (
             <ItemTask
-              key={index}
+              key={task.id}
               task={task}
               handleCheckboxClick={handleTaskCheckboxClick}
             />
