@@ -1,21 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-//NESTE HOOK OPTEI PELO FETCH PARA QUESTÃO DE ESTUDOS
+import { api } from "../../lib/axios"
 
 export const useDeleteAllTasks = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationKey: ["deleteAllTasks"],
     mutationFn: async () => {
-      const tasks = await fetch("http://localhost:3000/tasks").then((res) =>
-        res.json()
-      )
+      const { data: tasks } = await api.get("/tasks")
 
-      await Promise.all(
-        tasks.map((task) =>
-          fetch(`http://localhost:3000/tasks/${task.id}`, { method: "DELETE" })
-        )
-      )
+      await Promise.all(tasks.map((task) => api.delete(`/tasks/${task.id}`)))
     },
     onSuccess: () => {
       queryClient.setQueryData(["tasks"], [])
