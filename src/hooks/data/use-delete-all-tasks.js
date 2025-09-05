@@ -1,5 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
+//NESTE HOOK OPTEI PELO FETCH PARA QUESTÃO DE ESTUDOS
+
 export const useDeleteAllTasks = () => {
   const queryClient = useQueryClient()
   return useMutation({
