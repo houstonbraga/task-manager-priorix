@@ -31,7 +31,7 @@ const Button = ({ children, color, size, className, ...rest }) => {
 
 Button.propTypes = {
   children: PropTypes.node.isRequired,
-  color: PropTypes.oneOf(["primary", "ghost", "secondary"]),
+  color: PropTypes.oneOf(["primary", "ghost", "secondary", "danger"]),
   size: PropTypes.oneOf(["small", "large"]),
   className: PropTypes.string,
 }
