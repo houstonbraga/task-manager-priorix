@@ -6,7 +6,7 @@ import { toast } from "sonner"
 import Button from "../../components/Button"
 import { useDeleteTask } from "../../hooks/data/use-delete-task"
 import { useGetTaskDetails } from "../../hooks/data/use-get-task-details"
-import { useUpdateTaskDetails } from "../../hooks/data/use-update-task-details"
+import { useUpdateTask } from "../../hooks/data/use-update-task-details"
 import Sidebar from "../../sidebar"
 import Input from "../../task/components/Input"
 import SelectTime from "../../task/components/SelectTime"
@@ -24,7 +24,7 @@ const TaskDetailsPage = () => {
   const { data: task } = useGetTaskDetails(taskId, reset)
   //update
   const { mutate: updateTask, isPending: updateIsLoading } =
-    useUpdateTaskDetails(taskId)
+    useUpdateTask(taskId)
   //delete
   const { mutate: deleteTask, isPending: deleteIsLoading } =
     useDeleteTask(taskId)

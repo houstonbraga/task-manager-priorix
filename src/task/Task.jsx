@@ -1,4 +1,3 @@
-import { useQueryClient } from "@tanstack/react-query"
 import {
   CloudSun,
   Loader2,
@@ -13,13 +12,11 @@ import { toast } from "sonner"
 import Button from "../components/Button"
 import { useDeleteAllTasks } from "../hooks/data/use-delete-all-tasks"
 import { useGetTasks } from "../hooks/data/use-get-tasks"
-import { queries } from "../keys/queries"
 import AddTaskDialog from "./components/AddTaskDialog"
 import ItemTask from "./components/ItemTask"
 import TasksSeparator from "./components/TasksSeparator"
 
 const Tasks = () => {
-  const queryClient = useQueryClient()
   const { data: tasks } = useGetTasks()
   const { mutate: deleteTasks, isPending } = useDeleteAllTasks()
   const [isOpen, setIsOpen] = useState(false)
@@ -27,47 +24,6 @@ const Tasks = () => {
   const morningTask = tasks?.filter((task) => task.time === "morning")
   const afternoonTask = tasks?.filter((task) => task.time === "afternoon")
   const eveningTask = tasks?.filter((task) => task.time === "evening")
-
-  //MUDA O STATUS DA TAREFA AO SER CLICADO
-  const handleTaskCheckboxClick = (taskId) => {
-    const newTasks = tasks.map((task) => {
-      if (taskId !== task.id) {
-        return task
-      }
-
-      if (task.status === "done") {
-        toast.success("Tarefa desmarcada com sucesso!", {
-          style: {
-            backgroundColor: "#6b7280",
-            color: "white",
-          },
-        })
-        return { ...task, status: "not_started" }
-      }
-
-      if (task.status === "not_started") {
-        toast.success("Tarefa inicializada com sucesso!", {
-          style: {
-            backgroundColor: "#5d512d",
-            color: "white",
-          },
-        })
-        return { ...task, status: "in_progress" }
-      }
-
-      if (task.status === "in_progress") {
-        toast.success("Tarefa concluida com sucesso!", {
-          style: {
-            backgroundColor: "#3a5948",
-            color: "white",
-          },
-        })
-        return { ...task, status: "done" }
-      }
-      return task
-    })
-    queryClient.setQueryData(queries.getAll(), newTasks)
-  }
 
   const handleDialogClose = () => {
     return setIsOpen(false)
@@ -126,11 +82,7 @@ const Tasks = () => {
             </p>
           )}
           {morningTask?.map((task) => (
-            <ItemTask
-              key={task.id}
-              task={task}
-              handleCheckboxClick={handleTaskCheckboxClick}
-            />
+            <ItemTask key={task.id} task={task} />
           ))}
         </div>
 
@@ -142,11 +94,7 @@ const Tasks = () => {
             </p>
           )}
           {afternoonTask?.map((task) => (
-            <ItemTask
-              key={task.id}
-              task={task}
-              handleCheckboxClick={handleTaskCheckboxClick}
-            />
+            <ItemTask key={task.id} task={task} />
           ))}
         </div>
 
@@ -158,11 +106,7 @@ const Tasks = () => {
             </p>
           )}
           {eveningTask?.map((task) => (
-            <ItemTask
-              key={task.id}
-              task={task}
-              handleCheckboxClick={handleTaskCheckboxClick}
-            />
+            <ItemTask key={task.id} task={task} />
           ))}
         </div>
       </div>

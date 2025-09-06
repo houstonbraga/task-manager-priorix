@@ -5,8 +5,10 @@ import { toast } from "sonner"
 
 import Button from "../../components/Button"
 import { useDeleteTask } from "../../hooks/data/use-delete-task"
+import { useUpdateTask } from "../../hooks/data/use-update-task-details"
 
-const ItemTask = ({ task, handleCheckboxClick }) => {
+const ItemTask = ({ task }) => {
+  const { mutate: updateStatus } = useUpdateTask(task.id)
   const { mutate: deleteTask, isPending } = useDeleteTask(task.id)
 
   const handleDeleteClick = () => {
@@ -40,6 +42,39 @@ const ItemTask = ({ task, handleCheckboxClick }) => {
     }
   }
 
+  const getStatusTask = () => {
+    if (task.status === "in_progress") {
+      return "done"
+    }
+    if (task.status === "not_started") {
+      return "in_progress"
+    }
+    return "not_started"
+  }
+
+  const handleCheckboxClick = () => {
+    let status = getStatusTask()
+    updateStatus(
+      { status },
+      {
+        onSuccess: () => {
+          if (status === "not_started") {
+            toast.success("Tarefa desmarcada com sucesso!")
+          }
+          if (status === "done") {
+            toast.success("Tarefa finalizada com sucesso!")
+          }
+          if (status === "in_progress") {
+            toast.success("Tarefa em progresso!")
+          }
+        },
+        onError: () => {
+          toast.error("Erro ao mudar o status da tarefa.")
+        },
+      }
+    )
+  }
+
   return (
     <div
       className={`flex items-center justify-between rounded-xl p-3 text-sm ${getStyleTasks()}`}
@@ -52,7 +87,7 @@ const ItemTask = ({ task, handleCheckboxClick }) => {
             type="checkbox"
             checked={task.status === "done"}
             className="absolute h-full w-full cursor-pointer opacity-0"
-            onChange={() => handleCheckboxClick(task?.id)}
+            onChange={handleCheckboxClick}
           />
           {task?.status === "done" && <Check width={16} />}
           {task?.status === "in_progress" && (

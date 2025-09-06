@@ -4,15 +4,16 @@ import { mutations } from "../../keys/mutations"
 import { queries } from "../../keys/queries"
 import { api } from "../../lib/axios"
 
-export const useUpdateTaskDetails = (taskId) => {
+export const useUpdateTask = (taskId) => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationKey: mutations.update(taskId),
     mutationFn: async (data) => {
       const { data: updatedTask } = await api.patch(`/tasks/${taskId}`, {
-        title: data.title.trim(),
-        time: data.time,
-        description: data.description.trim(),
+        title: data?.title?.trim(),
+        time: data?.time,
+        description: data?.description?.trim(),
+        status: data?.status,
       })
       return updatedTask
     },
