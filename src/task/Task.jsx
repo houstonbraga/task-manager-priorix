@@ -13,6 +13,7 @@ import { toast } from "sonner"
 import Button from "../components/Button"
 import { useDeleteAllTasks } from "../hooks/data/use-delete-all-tasks"
 import { useGetTasks } from "../hooks/data/use-get-tasks"
+import { queries } from "../keys/queries"
 import AddTaskDialog from "./components/AddTaskDialog"
 import ItemTask from "./components/ItemTask"
 import TasksSeparator from "./components/TasksSeparator"
@@ -65,7 +66,7 @@ const Tasks = () => {
       }
       return task
     })
-    queryClient.setQueryData(["tasks"], newTasks)
+    queryClient.setQueryData(queries.getAll(), newTasks)
   }
 
   const handleDialogClose = () => {
