@@ -5,7 +5,7 @@ import ButtonSidebar from "./components/ButtonSidebar"
 
 const Sidebar = () => {
   return (
-    <div className="sticky top-0 flex h-screen w-[270] flex-col justify-between bg-zinc-900">
+    <div className="sticky top-0 flex h-screen w-[270px] min-w-[270px] flex-col justify-between bg-zinc-900">
       <div>
         <div className="space-y-4 border-b border-b-zinc-700 p-5">
           <img src={Logo} alt="logo-priorix" width={80} />
@@ -15,11 +15,11 @@ const Sidebar = () => {
           </p>
         </div>
         <div className="flex flex-col space-y-2 p-2">
-          <ButtonSidebar>
+          <ButtonSidebar href="/">
             <LayoutDashboardIcon width={20} />
             Dashboard
           </ButtonSidebar>
-          <ButtonSidebar mode="activated">
+          <ButtonSidebar href="/tasks">
             <ListCheckIcon />
             Minhas Tarefas
           </ButtonSidebar>

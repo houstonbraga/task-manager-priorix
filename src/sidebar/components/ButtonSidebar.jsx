@@ -1,7 +1,8 @@
 import PropTypes from "prop-types"
+import { NavLink } from "react-router-dom"
 import { tv } from "tailwind-variants"
 
-const ButtonSidebar = ({ children, mode }) => {
+const ButtonSidebar = ({ children, to }) => {
   const button = tv({
     base: "flex items-center gap-3 rounded-lg px-6 py-3",
     variants: {
@@ -16,9 +17,14 @@ const ButtonSidebar = ({ children, mode }) => {
   })
 
   return (
-    <a href="#" className={button({ mode })}>
+    <NavLink
+      to={to}
+      className={({ isActive }) =>
+        button({ mode: isActive ? "activated" : "desactivated" })
+      }
+    >
       {children}
-    </a>
+    </NavLink>
   )
 }
 
