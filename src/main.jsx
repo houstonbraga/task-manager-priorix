@@ -6,17 +6,22 @@ import ReactDOM from "react-dom/client"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { Toaster } from "sonner"
 
-import App from "./App.jsx"
-import TaskDetails from "./pages/task-details/task-details.jsx"
+import HomePage from "./pages/home.jsx"
+import TaskDetailsPage from "./pages/taskDetails.jsx"
+import TasksPage from "./pages/TasksPage.jsx"
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <HomePage />,
+  },
+  {
+    path: "/tasks",
+    element: <TasksPage />,
   },
   {
     path: "/tasks/:taskId",
-    element: <TaskDetails />,
+    element: <TaskDetailsPage />,
   },
 ])
 
