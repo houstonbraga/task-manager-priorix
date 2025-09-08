@@ -3,13 +3,13 @@ import { useForm } from "react-hook-form"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { toast } from "sonner"
 
-import Button from "../../components/Button"
-import { useDeleteTask } from "../../hooks/data/use-delete-task"
-import { useGetTaskDetails } from "../../hooks/data/use-get-task-details"
-import { useUpdateTask } from "../../hooks/data/use-update-task-details"
-import Sidebar from "../../sidebar"
-import Input from "../../task/components/Input"
-import SelectTime from "../../task/components/SelectTime"
+import Button from "../components/Button"
+import { useDeleteTask } from "../hooks/data/use-delete-task"
+import { useGetTaskDetails } from "../hooks/data/use-get-task-details"
+import { useUpdateTask } from "../hooks/data/use-update-task-details"
+import Sidebar from "../sidebar"
+import Input from "../tasks/components/Input"
+import SelectTime from "../tasks/components/SelectTime"
 
 const TaskDetailsPage = () => {
   const { taskId } = useParams()
@@ -59,7 +59,7 @@ const TaskDetailsPage = () => {
       <div className="flex w-full flex-col px-8 py-6">
         <button
           className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-cyan-400"
-          onClick={() => navigate("/")}
+          onClick={() => navigate(-1)}
         >
           <ChevronsLeft width={20} />
         </button>
