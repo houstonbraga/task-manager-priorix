@@ -3,9 +3,9 @@ import PropTypes from "prop-types"
 import { Link } from "react-router-dom"
 import { toast } from "sonner"
 
-import Button from "../../components/Button"
-import { useDeleteTask } from "../../hooks/data/use-delete-task"
-import { useUpdateTask } from "../../hooks/data/use-update-task-details"
+import { useDeleteTask } from "../hooks/data/use-delete-task"
+import { useUpdateTask } from "../hooks/data/use-update-task-details"
+import Button from "./Button"
 
 const ItemTask = ({ task }) => {
   const { mutate: updateStatus } = useUpdateTask(task.id)

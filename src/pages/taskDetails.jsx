@@ -4,12 +4,12 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import { toast } from "sonner"
 
 import Button from "../components/Button"
+import Input from "../components/Input"
+import SelectTime from "../components/SelectTime"
 import { useDeleteTask } from "../hooks/data/use-delete-task"
 import { useGetTaskDetails } from "../hooks/data/use-get-task-details"
 import { useUpdateTask } from "../hooks/data/use-update-task-details"
 import Sidebar from "../sidebar"
-import Input from "../tasks/components/Input"
-import SelectTime from "../tasks/components/SelectTime"
 
 const TaskDetailsPage = () => {
   const { taskId } = useParams()

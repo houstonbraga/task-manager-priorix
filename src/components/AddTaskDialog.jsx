@@ -9,8 +9,8 @@ import { CSSTransition } from "react-transition-group"
 import { toast } from "sonner"
 import { v4 } from "uuid"
 
-import Button from "../../components/Button"
-import { useAddTask } from "../../hooks/data/use-add-task"
+import { useAddTask } from "../hooks/data/use-add-task"
+import Button from "./Button"
 import Input from "./Input"
 import SelectTime from "./SelectTime"
 

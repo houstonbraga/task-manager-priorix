@@ -1,5 +1,5 @@
+import Tasks from "../components/Task"
 import Sidebar from "../sidebar"
-import Tasks from "../tasks/Task"
 
 function TasksPage() {
   return (
