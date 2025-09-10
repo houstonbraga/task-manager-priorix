@@ -30,7 +30,7 @@ const DashboardCardsList = () => {
       />
       <DashboardCard
         icon={<Dumbbell className="text-cyan-400" />}
-        content="5"
+        content="0"
         title="Treinos concluídos"
       />
     </div>
