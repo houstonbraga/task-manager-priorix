@@ -1,3 +1,25 @@
 {
-  "tasks": []
+  "tasks": [
+    {
+      "id": "b3090cde-6836-4a42-97aa-af2952ff8447",
+      "title": "Agradecer ao senhor",
+      "time": "morning",
+      "description": "agradecer",
+      "status": "done"
+    },
+    {
+      "id": "3b0c811c-1485-4e8b-b2d8-29ec5b842826",
+      "title": "Estudar Typescript",
+      "time": "afternoon",
+      "description": "estudar",
+      "status": "not_started"
+    },
+    {
+      "id": "00073163-1012-48ab-aa13-2f3f5a34e262",
+      "title": "Aula de inglês",
+      "time": "evening",
+      "description": "Aula de inglês",
+      "status": "done"
+    }
+  ]
 }
