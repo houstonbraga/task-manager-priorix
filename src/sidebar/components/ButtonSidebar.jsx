@@ -30,7 +30,7 @@ const ButtonSidebar = ({ children, to }) => {
 
 ButtonSidebar.propTypes = {
   children: PropTypes.node.isRequired,
-  mode: PropTypes.oneOf(["activated", "desactivated"]),
+  to: PropTypes.oneOf(["activated", "desactivated"]),
 }
 
 export default ButtonSidebar
