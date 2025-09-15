@@ -9,12 +9,30 @@ export const useDeleteAllTasks = () => {
   return useMutation({
     mutationKey: mutations.deleteAll(),
     mutationFn: async () => {
-      const { data: tasks } = await api.get("/tasks")
+      try {
+        // Busca todas as tasks
+        const { data: tasks } = await api.get("/tasks")
 
-      await Promise.all(tasks.map((task) => api.delete(`/tasks/${task.id}`)))
+        if (!tasks || tasks.length === 0) {
+          throw new Error()
+        }
+
+        // Deleta todas as tasks em paralelo
+        await Promise.all(tasks.map((task) => api.delete(`/tasks/${task.id}`)))
+      } catch (error) {
+        console.error("Erro ao deletar todas as tasks:", error)
+        throw error // Re-throw para que o React Query possa tratar
+      }
     },
     onSuccess: () => {
+      // Atualiza o cache local
       queryClient.setQueryData(queries.getAll(), [])
+
+      // Invalida todas as queries relacionadas para garantir consistência
+      queryClient.invalidateQueries({ queryKey: queries.getAll() })
+    },
+    onError: (error) => {
+      console.error("Falha ao deletar todas as tasks:", error)
     },
   })
 }
